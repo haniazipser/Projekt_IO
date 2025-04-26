@@ -1,7 +1,7 @@
-INSERT INTO class_group (name, instructor)
+INSERT INTO class_group (name, instructor, creator)
 VALUES
-('Computer Science', 'polanski@gmail.com'),
-('Discrete Mathematics', 'zygadlo@gmail.com');
+('Computer Science', 'polanski@gmail.com', 'JaneSmith@gmail.com'),
+('Discrete Mathematics', 'zygadlo@gmail.com', 'JohnDoe@gmail.com');
 
 INSERT INTO class_group_class_times (class_group_id, day_of_week, time)
 VALUES
