@@ -1,0 +1,26 @@
+services:
+  cm_mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    restart: always
+    ports:
+      - "1025:1025" #127.0.0.1:1025:1025
+      - "8025:8025"
+  cm_keycloak:
+    image: quay.io/keycloak/keycloak:26.2.1
+    environment:
+      #KC_HOSTNAME: localhost
+      #KC_HOSTNAME_PORT: 7080
+      #KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      #KC_HEALTH_ENABLED: "true"
+      #KC_LOG_LEVEL: info
+    ports:
+      - "8280:8080"
+    # command: -v start-dev
+    command: -v start-dev --import-realm
+    #command: export --dir /opt/keycloak/data/export --realm Users
+    volumes:
+        - ./imports:/opt/keycloak/data/import
+        - ./exports:/opt/keycloak/data/export
