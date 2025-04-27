@@ -2,9 +2,11 @@ package com.example.Projekt_IO.Services;
 
 import com.example.Projekt_IO.Model.Dtos.ClassGroupDto;
 import com.example.Projekt_IO.Model.Dtos.ClassSessionDto;
+import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
 import com.example.Projekt_IO.Model.Dtos.TaskDto;
 import com.example.Projekt_IO.Model.Entities.ClassGroup;
 import com.example.Projekt_IO.Model.Entities.ClassSession;
+import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,7 @@ public class GroupClassApplicationService {
     private final EmailService emailService;
     private final ClassSessionService classSessionService;
     private final DeclarationService declarationService;
+    private final ExerciseService exerciseService;
 
     public void addStudentToGroup(String email, Long groupId) {
         groupClassService.addStudentToGroup(email, groupId);
@@ -42,6 +45,8 @@ public class GroupClassApplicationService {
             task.setDueDate(s.getClassDate());
             Integer count = declarationService.getDeclarationsForSessionCount(email, s.getId());
             task.setNumberOfDeclarations(count);
+            Set<ExerciseDto> assigned = exerciseService.getAssignedExercisesForSession(email, s.getId());
+            task.setAssigned(assigned);
             tasks.add(task);
         }
         return tasks;

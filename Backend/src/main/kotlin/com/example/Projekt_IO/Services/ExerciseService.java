@@ -17,4 +17,8 @@ public class ExerciseService {
     public Set<ExerciseDto> getExercisesForSession(Long sessionId) {
         return exerciseRepository.findByClassSession_Id(sessionId).stream().map((e -> new ExerciseDto(e))).collect(Collectors.toSet());
     }
+
+    public Set<ExerciseDto> getAssignedExercisesForSession(String email, Long id) {
+        return exerciseRepository.findByApprovedStudentAndClassSession_Id(email,id).stream().map((e -> new ExerciseDto(e))).collect(Collectors.toSet());
+    }
 }
