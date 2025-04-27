@@ -4,6 +4,7 @@ import com.example.Projekt_IO.Model.Dtos.ClassGroupDto;
 import com.example.Projekt_IO.Model.Dtos.NewGroupDto;
 import com.example.Projekt_IO.Services.GroupClassApplicationService;
 import com.example.Projekt_IO.Services.GroupClassService;
+import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +19,17 @@ public class ClassGroupController {
 
     private final GroupClassService groupClassService;
     private final GroupClassApplicationService groupClassApplicationService;
-    @PostMapping("/create/{email}")
-    public void createGroup(@PathVariable String email, @RequestBody NewGroupDto groupDto){
+    private final UserInfoService userInfoService;
+    @PostMapping("/create")
+    public void createGroup(@RequestBody NewGroupDto groupDto){
+        String email = userInfoService.getLoggedUserInfo().getEmail();
         groupClassService.createGroup(email, groupDto);
     }
 
-    @GetMapping("/{email}/groups")
-    public Set<ClassGroupDto> getStudentGroups(@PathVariable String email){
+    @GetMapping("/groups")
+    public Set<ClassGroupDto> getStudentGroups(){
+        String email = userInfoService.getLoggedUserInfo().getEmail();
+        System.out.println(email);
         return groupClassService.getUsersGroups(email);
     }
 
@@ -33,7 +38,7 @@ public class ClassGroupController {
         return groupClassService.getStudentsInGroup(groupId);
     }
 
-    @PutMapping("/{email}/{groupId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
+    @PostMapping("/{email}/{groupId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
     public void addStudentToGroup(@PathVariable String email, @PathVariable Long groupId){
         groupClassApplicationService.addStudentToGroup(email, groupId);
     }

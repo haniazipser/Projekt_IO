@@ -2,6 +2,7 @@ package com.example.Projekt_IO.Services;
 
 import com.example.Projekt_IO.Model.Dtos.ClassGroupDto;
 import com.example.Projekt_IO.Model.Dtos.NewGroupDto;
+import com.example.Projekt_IO.Model.Dtos.UserDto;
 import com.example.Projekt_IO.Model.Entities.ClassGroup;
 
 import com.example.Projekt_IO.Model.Entities.StudentGroup;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class GroupClassService {
     private final ClassGroupRepository classGroupRepository;
     private final StudentGroupRepository studentGroupRepository;
+    private final UserInfoService userInfoService;
     Logger logger = LoggerFactory.getLogger(GroupClassService.class);
     public Set<ClassGroupDto> getUsersGroups (String email){
       return classGroupRepository.findDistinctByStudents_Email(email).stream().map(g -> new ClassGroupDto(g)).collect(Collectors.toSet());
@@ -44,15 +46,11 @@ public class GroupClassService {
 
     public void addStudentToGroup(String email, Long groupId) {
         Optional<ClassGroup> classGroup = classGroupRepository.findById(groupId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String loggedEmail = jwt.getClaim("email");
+        UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
-        logger.info("name: " + loggedEmail);
-        logger.info("creator: " + classGroup.get().getCreator());
         if (classGroup.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }else if (!classGroup.get().getCreator().toLowerCase().equals( loggedEmail.toLowerCase())){
+        }else if (!classGroup.get().getCreator().toLowerCase().equals( loggedUser.getEmail().toLowerCase())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to add students to this group");
         }
 
@@ -71,12 +69,10 @@ public class GroupClassService {
 
     public void deleteStudentFromGroup(String email, Long groupId) {
         Optional<ClassGroup> classGroup = classGroupRepository.findById(groupId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String loggedEmail = jwt.getClaim("email");
+        UserDto loggedUser = userInfoService.getLoggedUserInfo();
         if (classGroup.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }else if (!classGroup.get().getCreator().toLowerCase().equals( loggedEmail.toLowerCase())){
+        }else if (!classGroup.get().getCreator().toLowerCase().equals(  loggedUser.getEmail().toLowerCase().toLowerCase())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to delete students to this group");
         }
         boolean found = false;
@@ -90,16 +86,27 @@ public class GroupClassService {
         if (!found){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This student is not in this group");
         }
-
-
-
     }
 
     public Set<String> getStudentsInGroup(Long groupId) {
         Optional<ClassGroup> classGroup = classGroupRepository.findById(groupId);
+        UserDto loggedUser = userInfoService.getLoggedUserInfo();
+
         if (classGroup.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
         }
+
+        boolean found = false;
+        for (StudentGroup student : classGroup.get().getStudents()){
+            if (student.getEmail().toLowerCase().equals(loggedUser.getEmail())){
+                found = true;
+                break;
+            }
+        }
+        if (!found){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not a member of this group");
+        }
+
         return classGroup.get().getStudents().stream().map(s -> s.getEmail()).collect(Collectors.toSet());
     }
 
