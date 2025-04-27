@@ -16,6 +16,7 @@ import java.util.Set;
 @RequestMapping("/group")
 @RequiredArgsConstructor
 public class ClassGroupController {
+    //komentarz
 
     private final GroupClassService groupClassService;
     private final GroupClassApplicationService groupClassApplicationService;
