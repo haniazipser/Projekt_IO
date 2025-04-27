@@ -54,4 +54,12 @@ public class DeclarationService {
         }*/
 
     }
+
+    public Set<DeclarationDto> getUsersDeclarationsForSession(String email, Long id) {
+        return declarationRepository.findByStudentAndExerciseClassSession_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+    }
+
+    public Integer getDeclarationsForSessionCount(String email, Long id) {
+        return declarationRepository.countByStudentAndExerciseClassSession_Id(email,id);
+    }
 }
