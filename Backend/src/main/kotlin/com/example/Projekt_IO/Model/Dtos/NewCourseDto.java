@@ -1,6 +1,6 @@
 package com.example.Projekt_IO.Model.Dtos;
 
-import com.example.Projekt_IO.Model.Entities.ClassTime;
+import com.example.Projekt_IO.Model.Entities.LessonTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +8,13 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class NewGroupDto {
+public class NewCourseDto {
+
     private Long id;
     private String name;
     private String  instructor;
     private String creator;
-    private Set<ClassTime> classTimes;
+    private Set<LessonTime> lessonTimes;
 
-    public NewGroupDto(){}
+    public NewCourseDto(){}
 }

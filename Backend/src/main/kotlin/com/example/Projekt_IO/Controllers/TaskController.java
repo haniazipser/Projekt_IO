@@ -1,8 +1,7 @@
 package com.example.Projekt_IO.Controllers;
 
 import com.example.Projekt_IO.Model.Dtos.TaskDto;
-import com.example.Projekt_IO.Services.ClassSessionService;
-import com.example.Projekt_IO.Services.GroupClassApplicationService;
+import com.example.Projekt_IO.Services.CourseApplicationService;
 import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +15,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TaskController {
     private final UserInfoService userInfoService;
-    private final GroupClassApplicationService groupClassApplicationService;
+    private final CourseApplicationService courseApplicationService;
 
     @GetMapping("")
     public Set<TaskDto> getStudentsTasks(){
         System.out.println("w kontrolerze");
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return groupClassApplicationService.getStudentsTasks(email);
+        return courseApplicationService.getStudentsTasks(email);
     }
 }

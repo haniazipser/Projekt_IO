@@ -9,17 +9,17 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter
-@Table(name = "class_session")
-public class ClassSession {
+@Table(name = "lesson")
+public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime classDate;
     @ManyToOne
-    private ClassGroup classGroup;
-    @OneToMany(mappedBy = "classSession")
-    private Set<Exercise> classExercises;
+    private Course course;
+    @OneToMany(mappedBy = "lesson")
+    private Set<Exercise> lessonExercises;
 
-    public ClassSession(){}
+    public Lesson(){}
 
 }

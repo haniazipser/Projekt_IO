@@ -1,15 +1,11 @@
 package com.example.Projekt_IO.Model.Dtos;
 
-import com.example.Projekt_IO.Model.Entities.Activity;
-import com.example.Projekt_IO.Model.Entities.ClassSession;
 import com.example.Projekt_IO.Model.Entities.Exercise;
-import com.example.Projekt_IO.Model.Entities.ExerciseDeclaration;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+
 @Getter @Setter
 public class ExerciseDto {
     private Long id;
@@ -19,8 +15,8 @@ public class ExerciseDto {
     private String subpoint;
     public ExerciseDto(Exercise exercise){
         this.id=exercise.getId();
-        this.classDate = exercise.getClassSession().getClassDate();
-        this.groupName = exercise.getClassSession().getClassGroup().getName();
+        this.classDate = exercise.getLesson().getClassDate();
+        this.groupName = exercise.getLesson().getCourse().getName();
         this.exerciseNumber = exercise.getExerciseNumber();
         this.subpoint = exercise.getSubpoint();
 

@@ -1,7 +1,5 @@
 package com.example.Projekt_IO.Model.Dtos;
 
-import com.example.Projekt_IO.Model.Entities.ClassTime;
-import com.example.Projekt_IO.Model.Entities.Exercise;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +9,8 @@ import java.util.Set;
 @Setter
 public class TaskDto {
     private Long groupId;
-    private String groupName;
+    private String courseName;
     private LocalDateTime dueDate;
     private Integer numberOfDeclarations;
     private Set<ExerciseDto> assigned;
-
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
-    Set<Exercise> findByClassSession_Id(Long sessionId);
+    Set<Exercise> findByLesson_Id(Long sessionId);
 
-    Set<Exercise> findByApprovedStudentAndClassSession_Id(String email, Long id);
+    Set<Exercise> findByApprovedStudentAndLesson_Id(String email, Long id);
 }

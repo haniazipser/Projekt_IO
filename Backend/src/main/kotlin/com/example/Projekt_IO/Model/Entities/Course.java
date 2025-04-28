@@ -4,12 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.DayOfWeek;
 import java.util.Set;
 @Getter @Setter
 @Entity
-@Table(name = "class_group")
-public class ClassGroup {
+@Table(name = "course")
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,16 +16,16 @@ public class ClassGroup {
     private String  instructor;
     private String creator;
     @ElementCollection
-    private Set<ClassTime> classTimes;
+    private Set<LessonTime> lessonTimes;
 
-    @OneToMany(mappedBy = "classGroup")
-    private Set<ClassSession> sessions;
+    @OneToMany(mappedBy = "course")
+    private Set<Lesson> lessons;
 
     //private Set<String> students;
-    @OneToMany(mappedBy = "classGroup")
-    private Set<StudentGroup> students;
+    @OneToMany(mappedBy = "course")
+    private Set<Participant> students;
 
 
-    public ClassGroup(){}
+    public Course(){}
 
 }

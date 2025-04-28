@@ -14,12 +14,12 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private ClassSession classSession;
+    private Lesson lesson;
     private Integer exerciseNumber;
     private String subpoint;
 
     @OneToMany(mappedBy = "source")
-    private Set<Activity> solvers;
+    private Set<Point> solvers;
 
     @OneToMany(mappedBy = "exercise")
     private Set<ExerciseDeclaration> declarations;
