@@ -13,13 +13,13 @@ import java.util.Set;
 public class LessonController {
     private final ExerciseService exerciseService;
     private final LessonService lessonService;
-    @GetMapping("/{sessionId}/exercises")
-    public Set<ExerciseDto> getExercisesForSession (@PathVariable Long sessionId){
-        return exerciseService.getExercisesForSession(sessionId);
+    @GetMapping("/{lessonId}/exercises")
+    public Set<ExerciseDto> getExercisesForLesson(@PathVariable Long lessonId){
+        return exerciseService.getExercisesForLesson(lessonId);
     }
 
-    @PostMapping("/{sessionId}/addExercise")
-    public void addExerciseToSession(@PathVariable Long sessionId, @RequestBody ExerciseDto exercise){
-        lessonService.addExerciseToSession(sessionId,exercise);
+    @PostMapping("/{lessonId}/addExercise")
+    public void addExerciseToLesson(@PathVariable Long lessonId, @RequestBody ExerciseDto exercise){
+        lessonService.addExerciseToLesson(lessonId,exercise);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/group")
+@RequestMapping("/course")
 @RequiredArgsConstructor
 public class CourseController {
     //komentarz
@@ -25,31 +25,31 @@ public class CourseController {
         groupClassService.createGroup(email, groupDto);
     }
 
-    @GetMapping("/groups")
+    @GetMapping("/courses")
     public Set<CourseDto> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         System.out.println(email);
         return groupClassService.getUsersGroups(email);
     }
 
-    @GetMapping("{groupId}/students")
-    public Set<String> getStudentsInGroup(@PathVariable Long groupId){
-        return groupClassService.getStudentsInGroup(groupId);
+    @GetMapping("{courseId}/students")
+    public Set<String> getStudentsInGroup(@PathVariable Long courseId){
+        return groupClassService.getStudentsInGroup(courseId);
     }
 
-    @PostMapping("/{email}/{groupId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
-    public void addStudentToGroup(@PathVariable String email, @PathVariable Long groupId){
-        courseApplicationService.addStudentToGroup(email, groupId);
+    @PostMapping("/{email}/{courseId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
+    public void addStudentToGroup(@PathVariable String email, @PathVariable Long courseId){
+        courseApplicationService.addStudentToGroup(email, courseId);
     }
 
-    @DeleteMapping("/{email}/{groupId}")
-    public void deleteStudentFromGroup(@PathVariable String email, @PathVariable Long groupId){
-        groupClassService.deleteStudentFromGroup(email,groupId);
+    @DeleteMapping("/{email}/{courseId}")
+    public void deleteStudentFromGroup(@PathVariable String email, @PathVariable Long courseId){
+        groupClassService.deleteStudentFromGroup(email,courseId);
     }
 
     @PostMapping("/accept")
-    public void acceptInvitation(@RequestParam Long groupId) {
+    public void acceptInvitation(@RequestParam Long courseId) {
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        groupClassService.acceptInvite(email, groupId);
+        groupClassService.acceptInvite(email, courseId);
     }
 }

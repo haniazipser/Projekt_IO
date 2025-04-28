@@ -20,8 +20,8 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
 
-    public void addExerciseToSession(Long sessionId, ExerciseDto exerciseDto) {
-        Optional<Lesson> classSession = lessonRepository.findById(sessionId);
+    public void addExerciseToLesson(Long lessonId, ExerciseDto exerciseDto) {
+        Optional<Lesson> classSession = lessonRepository.findById(lessonId);
         if (classSession.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Class session not found");
         }
@@ -33,11 +33,11 @@ public class LessonService {
 
     }
 
-    public LessonDto getNextSession(Long groupId){
-        Optional<Lesson> session = lessonRepository.findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(groupId, LocalDateTime.now());
-        if (session.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There are no future sessions added for thsi group");
+    public LessonDto getNextLesson(Long courseId){
+        Optional<Lesson> lesson = lessonRepository.findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(courseId, LocalDateTime.now());
+        if (lesson.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There are no future lessons added for this group");
         }
-        return new LessonDto(session.get());
+        return new LessonDto(lesson.get());
     }
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 @Setter
 public class TaskDto {
     private Long groupId;
-    private String groupName;
+    private String courseName;
     private LocalDateTime dueDate;
     private Integer numberOfDeclarations;
     private Set<ExerciseDto> assigned;

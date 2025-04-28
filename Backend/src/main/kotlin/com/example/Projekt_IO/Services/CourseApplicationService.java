@@ -36,14 +36,14 @@ public class CourseApplicationService {
         Set<CourseDto> groups = groupClassService.getUsersGroups(email);
         Set<TaskDto> tasks = new HashSet<>();
         for (CourseDto g : groups)   {
-            LessonDto s = lessonService.getNextSession(g.getId());
+            LessonDto s = lessonService.getNextLesson(g.getId());
             TaskDto task = new TaskDto();
-            task.setGroupName(g.getName());
+            task.setCourseName(g.getName());
             task.setGroupId(g.getId());
             task.setDueDate(s.getClassDate());
             Integer count = declarationService.getDeclarationsForSessionCount(email, s.getId());
             task.setNumberOfDeclarations(count);
-            Set<ExerciseDto> assigned = exerciseService.getAssignedExercisesForSession(email, s.getId());
+            Set<ExerciseDto> assigned = exerciseService.getAssignedExercisesForLesson(email, s.getId());
             task.setAssigned(assigned);
             tasks.add(task);
         }

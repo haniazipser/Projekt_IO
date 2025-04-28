@@ -10,7 +10,7 @@ import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/activity")
+@RequestMapping("/points")
 public class PointController {
     private final PointService pointService;
     private final UserInfoService userInfoService;
@@ -20,10 +20,10 @@ public class PointController {
         return pointService.getUsersActivity(email);
     }
 
-    @GetMapping("/{groupId}")
-    public Set<PointDto> getUsersActivityInGroupClass(@PathVariable Long groupId){
+    @GetMapping("/{courseId}")
+    public Set<PointDto> getUsersActivityInGroupClass(@PathVariable Long courseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return pointService.getUsersActivityInGroupClass(email,groupId);
+        return pointService.getUsersActivityInGroupClass(email,courseId);
     }
 
     @PostMapping("")//wysylasz mi z formularza obiekt z polami jak ma activity dto

@@ -15,14 +15,14 @@ public class CourseDto {
     private String  instructor;
     private String creator;
     private Set<LessonTime> lessonTimes;
-    private Set<LessonDto> sessions;
+    private Set<LessonDto> lessons;
     public CourseDto(Course group){
         this.id = group.getId();
         this.name = group.getName();
         this.instructor = group.getInstructor();
         this.creator = group.getCreator();
         this.lessonTimes = group.getLessonTimes();
-        this.sessions = group.getSessions().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
+        this.lessons = group.getLessons().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
     }
 
 

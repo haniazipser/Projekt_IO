@@ -27,7 +27,7 @@ public class DeclarationService {
         if (exercise.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found");
         }else if(exercise.get().getLesson().getClassDate().isBefore(LocalDateTime.now())){
-            throw new IllegalStateException("You can not declare exercises from past class sessions");
+            throw new IllegalStateException("You can not declare exercises from past class lessons");
         }//MOZEMY DODAC ZE DEKLAROWAC MOZNA TYLKO 24 GODZ PRZED
         ///SPRAWDZIC CZY STUDENT NALEZY DO GRUPY ZAJECIOWEJ Z KTOREJ JEST TO ZADANIE
 

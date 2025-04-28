@@ -18,7 +18,7 @@ public class Lesson {
     @ManyToOne
     private Course course;
     @OneToMany(mappedBy = "lesson")
-    private Set<Exercise> classExercises;
+    private Set<Exercise> lessonExercises;
 
     public Lesson(){}
 

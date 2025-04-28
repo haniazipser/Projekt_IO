@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 public class LessonDto {
     private Long id;
     private LocalDateTime classDate;
-    private String classGroupName;
+    private String CourseName;
 
     public LessonDto(Lesson lesson){
         this.id = lesson.getId();
         this.classDate = lesson.getClassDate();
-        this.classGroupName = lesson.getCourse().getName();
+        this.CourseName = lesson.getCourse().getName();
     }
 }

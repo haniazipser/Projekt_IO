@@ -19,7 +19,7 @@ public class Course {
     private Set<LessonTime> lessonTimes;
 
     @OneToMany(mappedBy = "course")
-    private Set<Lesson> sessions;
+    private Set<Lesson> lessons;
 
     //private Set<String> students;
     @OneToMany(mappedBy = "course")
