@@ -29,7 +29,20 @@
           "value": "1qazxsw2;)"
         }
       ]
-    }
+    },{
+    "username": "brecht@rybik.eu",
+    "enabled": true,
+    "emailVerified": true,
+    "firstName": "rybik",
+    "lastName": "rynik",
+    "email": "brecht@rybik.eu",
+    "credentials": [
+      {
+        "type": "password",
+        "value": "rybik11#"
+      }
+    ]
+  }
   ],
 
   "notBefore": 0,
