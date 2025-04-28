@@ -15,5 +15,6 @@ public class NewCourseDto {
     private String name;
     private String  instructor;
     private Set<LessonTime> lessonTimes;
+    private Set<String> students;
     public NewCourseDto(){}
 }
