@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +24,7 @@ public class PointService {
     public Set<PointDto> getUsersActivity (String email){
         return pointRepository.findByStudent(email).stream().map(a -> new PointDto(a)).collect(Collectors.toSet());
     }
-    public Set<PointDto> getUsersActivityInGroupClass(String email, Long groupId) {
+    public Set<PointDto> getUsersActivityInGroupClass(String email, UUID groupId) {
         return pointRepository.findByStudentAndSource_Id(email, groupId).stream().map(a -> new PointDto(a)).collect(Collectors.toSet());
     }
 

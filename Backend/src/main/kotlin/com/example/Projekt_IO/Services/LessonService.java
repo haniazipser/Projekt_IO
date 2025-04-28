@@ -1,9 +1,12 @@
 package com.example.Projekt_IO.Services;
 
+import com.example.Projekt_IO.Model.Dtos.CourseDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
+import com.example.Projekt_IO.Model.Entities.Course;
 import com.example.Projekt_IO.Model.Entities.Lesson;
 import com.example.Projekt_IO.Model.Entities.Exercise;
+import com.example.Projekt_IO.Repositories.CourseRepository;
 import com.example.Projekt_IO.Repositories.LessonRepository;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +15,39 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class LessonService {
     private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
+    private final CourseRepository courseRepository;
 
-    public void addExerciseToLesson(Long lessonId, ExerciseDto exerciseDto) {
+    public LessonDto createNewLesson(UUID courseId, Integer numberOfExercises){
+        Optional<Course> c = courseRepository.findById(courseId);
+        if (c.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found");
+        }
+        Lesson lesson = new Lesson();
+        Course course = c.get();
+        lesson.setCourse(course);
+        lesson.setClassDate(course.findNextLessonDate());
+        lesson = lessonRepository.save(lesson);
+        List<Exercise> exercises = new ArrayList<>();
+        for (int i = 1; i <= numberOfExercises; i++){
+            Exercise exercise = new Exercise();
+            exercise.setExerciseNumber(i);
+            exercise.setLesson(lesson);
+            exercises.add(exercise);
+            exerciseRepository.save(exercise);
+        }
+        lesson.setLessonExercises(exercises);
+
+        return new LessonDto(lesson);
+    }
+
+    public void addExerciseToLesson(UUID lessonId, ExerciseDto exerciseDto) {
         Optional<Lesson> classSession = lessonRepository.findById(lessonId);
         if (classSession.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Class session not found");
@@ -33,7 +60,7 @@ public class LessonService {
 
     }
 
-    public LessonDto getNextLesson(Long courseId){
+    public LessonDto getNextLesson(UUID courseId){
         Optional<Lesson> lesson = lessonRepository.findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(courseId, LocalDateTime.now());
         if (lesson.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There are no future lessons added for this group");

@@ -6,14 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter @Setter
 @Table(name = "exercise_declaration")
 public class ExerciseDeclaration {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     private LocalDateTime declarationDate;
 
     @Enumerated(EnumType.STRING)
@@ -25,4 +25,10 @@ public class ExerciseDeclaration {
     private String student;
 
     public ExerciseDeclaration(){};
+    @PrePersist
+    public void generateId() {
+        if (id == null) {
+            id = UUID.randomUUID();
+        }
+    }
 }

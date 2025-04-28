@@ -5,10 +5,12 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
+
 @Getter
 @Setter
 public class TaskDto {
-    private Long groupId;
+    private UUID groupId;
     private String courseName;
     private LocalDateTime dueDate;
     private Integer numberOfDeclarations;

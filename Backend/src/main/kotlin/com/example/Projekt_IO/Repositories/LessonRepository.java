@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface LessonRepository extends JpaRepository<Lesson, Long> {
-    Optional<Lesson> findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(Long group, LocalDateTime now);
+public interface LessonRepository extends JpaRepository<Lesson, UUID> {
+    Optional<Lesson> findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(UUID group, LocalDateTime now);
 }
