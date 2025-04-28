@@ -10,7 +10,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class NewCourseDto {
-
     private UUID id;
     private String name;
     private String  instructor;
