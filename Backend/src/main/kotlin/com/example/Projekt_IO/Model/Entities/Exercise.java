@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter @Setter
 @Table(name = "exercise")
 public class Exercise {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     @ManyToOne
     private Lesson lesson;
     private Integer exerciseNumber;
@@ -27,4 +27,11 @@ public class Exercise {
     private String approvedStudent;
 
     public Exercise(){}
+
+    @PrePersist
+    public void generateId() {
+        if (id == null) {
+            id = UUID.randomUUID();
+        }
+    }
 }

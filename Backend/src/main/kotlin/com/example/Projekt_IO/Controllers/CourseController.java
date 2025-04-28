@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/course")
@@ -33,22 +34,22 @@ public class CourseController {
     }
 
     @GetMapping("{courseId}/students")
-    public Set<String> getStudentsInGroup(@PathVariable Long courseId){
+    public Set<String> getStudentsInGroup(@PathVariable UUID courseId){
         return groupClassService.getStudentsInGroup(courseId);
     }
 
     @PostMapping("/{email}/{courseId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
-    public void addStudentToGroup(@PathVariable String email, @PathVariable Long courseId){
+    public void addStudentToGroup(@PathVariable String email, @PathVariable UUID courseId){
         courseApplicationService.addStudentToGroup(email, courseId);
     }
 
     @DeleteMapping("/{email}/{courseId}")
-    public void deleteStudentFromGroup(@PathVariable String email, @PathVariable Long courseId){
+    public void deleteStudentFromGroup(@PathVariable String email, @PathVariable UUID courseId){
         groupClassService.deleteStudentFromGroup(email,courseId);
     }
 
     @PostMapping("/accept")
-    public void acceptInvitation(@RequestParam Long courseId) {
+    public void acceptInvitation(@RequestParam UUID courseId) {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         groupClassService.acceptInvite(email, courseId);
     }

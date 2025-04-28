@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class PointController {
     }
 
     @GetMapping("/{courseId}")
-    public Set<PointDto> getUsersActivityInGroupClass(@PathVariable Long courseId){
+    public Set<PointDto> getUsersActivityInGroupClass(@PathVariable UUID courseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return pointService.getUsersActivityInGroupClass(email,courseId);
     }

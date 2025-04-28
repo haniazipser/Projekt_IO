@@ -3,7 +3,9 @@ package com.example.Projekt_IO.Repositories;
 import com.example.Projekt_IO.Model.Entities.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ParticipantRepository extends JpaRepository<Participant, Long> {
+import java.util.UUID;
 
-    Participant findByEmailAndCourse_Id(String email, Long groupId);
+public interface ParticipantRepository extends JpaRepository<Participant, UUID> {
+
+    Participant findByEmailAndCourse_Id(String email, UUID groupId);
 }

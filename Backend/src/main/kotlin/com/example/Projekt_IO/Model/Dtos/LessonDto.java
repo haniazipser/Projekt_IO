@@ -5,16 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public class LessonDto {
-    private Long id;
+    private UUID id;
     private LocalDateTime classDate;
-    private String CourseName;
-
+    private String courseName;
+    private List<ExerciseDto> exercises;
     public LessonDto(Lesson lesson){
         this.id = lesson.getId();
         this.classDate = lesson.getClassDate();
-        this.CourseName = lesson.getCourse().getName();
+        this.courseName = lesson.getCourse().getName();
+        this.exercises = lesson.getLessonExercises().stream().map(e -> new ExerciseDto(e)).collect(Collectors.toList());
     }
 }

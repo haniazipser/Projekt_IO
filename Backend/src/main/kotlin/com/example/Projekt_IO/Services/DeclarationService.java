@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class DeclarationService {
     private  final DeclarationRepository declarationRepository;
     private final ExerciseRepository exerciseRepository;
-    public void declareExercise(String email, Long exerciseId) {
+    public void declareExercise(String email, UUID exerciseId) {
         ExerciseDeclaration declaration = new ExerciseDeclaration();
         Optional<Exercise> exercise = exerciseRepository.findById(exerciseId);
         if (exercise.isEmpty()){
@@ -54,11 +55,15 @@ public class DeclarationService {
 
     }
 
-    public Set<DeclarationDto> getUsersDeclarationsForSession(String email, Long id) {
+    public Set<DeclarationDto> getDeclarationsForLesson(String email, UUID id) {
         return declarationRepository.findByStudentAndExerciseLesson_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
     }
 
-    public Integer getDeclarationsForSessionCount(String email, Long id) {
+    public Integer getDeclarationsForSessionCount(String email, UUID id) {
         return declarationRepository.countByStudentAndExerciseLesson_Id(email,id);
+    }
+
+    public Set<DeclarationDto> getUsersDeclarationsInCourse(String email, UUID courseId) {
+        return declarationRepository.findByStudentAndExerciseLessonCourse_Id(email,courseId).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
     }
 }

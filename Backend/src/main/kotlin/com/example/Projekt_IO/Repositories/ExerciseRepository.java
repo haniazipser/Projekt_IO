@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Repository
-public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
-    Set<Exercise> findByLesson_Id(Long sessionId);
+public interface ExerciseRepository extends JpaRepository<Exercise, UUID> {
+    Set<Exercise> findByLesson_Id(UUID sessionId);
 
-    Set<Exercise> findByApprovedStudentAndLesson_Id(String email, Long id);
+    Set<Exercise> findByApprovedStudentAndLesson_Id(String email, UUID id);
 }

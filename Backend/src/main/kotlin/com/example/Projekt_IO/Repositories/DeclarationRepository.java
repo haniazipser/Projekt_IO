@@ -6,14 +6,18 @@ import com.example.Projekt_IO.Model.Entities.ExerciseDeclaration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 @Repository
-public interface DeclarationRepository extends JpaRepository<ExerciseDeclaration, Long> {
+public interface DeclarationRepository extends JpaRepository<ExerciseDeclaration, UUID> {
     Set<ExerciseDeclaration> findByStudent(String email);
-    Set<ExerciseDeclaration> findByExercise_Id(Long exerciseId);
+    Set<ExerciseDeclaration> findByExercise_Id(UUID exerciseId);
 
-    Set<ExerciseDeclaration> findByStudentAndExerciseLesson_Id(String email, Long id);
+    Set<ExerciseDeclaration> findByStudentAndExerciseLesson_Id(String email, UUID id);
 
-    Integer countByStudentAndExerciseLesson_Id(String email, Long id);
+    Integer countByStudentAndExerciseLesson_Id(String email, UUID id);
+
+    Set<ExerciseDeclaration> findByStudentAndExerciseLessonCourse_Id(String email, UUID courseId);
 }

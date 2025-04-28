@@ -4,9 +4,11 @@ import com.example.Projekt_IO.Model.Entities.Point;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter @Setter
 public class PointDto {
-        private Long id;
+        private UUID id;
         private String student;
         private ExerciseDto source;
         private Double activityValue;//zmieniam tutaj

@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +42,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void addStudentToGroup(String email, Long groupId) {
+    public void addStudentToGroup(String email, UUID groupId) {
         Optional<Course> classGroup = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
@@ -65,7 +66,7 @@ public class CourseService {
         participantRepository.save(participant);
     }
 
-    public void deleteStudentFromGroup(String email, Long groupId) {
+    public void deleteStudentFromGroup(String email, UUID groupId) {
         Optional<Course> classGroup = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
         if (classGroup.isEmpty()){
@@ -86,7 +87,7 @@ public class CourseService {
         }
     }
 
-    public Set<String> getStudentsInGroup(Long groupId) {
+    public Set<String> getStudentsInGroup(UUID groupId) {
         Optional<Course> classGroup = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
@@ -108,12 +109,12 @@ public class CourseService {
         return classGroup.get().getStudents().stream().map(s -> s.getEmail()).collect(Collectors.toSet());
     }
 
-    public CourseDto getGroupInfo(Long groupId){
+    public CourseDto getGroupInfo(UUID groupId){
         Course course = courseRepository.findById(groupId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
         return new CourseDto(course);
     }
 
-    public void acceptInvite(String email, Long groupId) {
+    public void acceptInvite(String email, UUID groupId) {
         Participant participant = participantRepository.findByEmailAndCourse_Id(email,groupId);
         participant.setInvitationStatus(InvitationStatus.ACCEPTED);
         participantRepository.save(participant);

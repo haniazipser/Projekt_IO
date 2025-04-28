@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter @Setter
 public class ExerciseDto {
-    private Long id;
+    private UUID id;
     private LocalDateTime classDate;
     private String groupName;
     private Integer exerciseNumber;

@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter @Setter
 public class CourseDto {
-    private Long id;
+    private UUID id;
     private String name;
     private String  instructor;
     private String creator;

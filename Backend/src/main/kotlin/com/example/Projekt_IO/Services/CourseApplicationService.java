@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class CourseApplicationService {
     private final DeclarationService declarationService;
     private final ExerciseService exerciseService;
 
-    public void addStudentToGroup(String email, Long groupId) {
+    public void addStudentToGroup(String email, UUID groupId) {
         String link = "http://localhost:8080/group/accept?groupId=" + groupId;
         groupClassService.addStudentToGroup(email, groupId);
         CourseDto group = groupClassService.getGroupInfo(groupId);
