@@ -1,14 +1,11 @@
 package com.example.Projekt_IO.Services;
 
-import com.example.Projekt_IO.Controllers.ClassSessionController;
-import com.example.Projekt_IO.Model.Dtos.ClassSessionDto;
+import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
-import com.example.Projekt_IO.Model.Entities.ClassGroup;
-import com.example.Projekt_IO.Model.Entities.ClassSession;
+import com.example.Projekt_IO.Model.Entities.Lesson;
 import com.example.Projekt_IO.Model.Entities.Exercise;
-import com.example.Projekt_IO.Repositories.ClassSessionRepository;
+import com.example.Projekt_IO.Repositories.LessonRepository;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
-import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,28 +16,28 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ClassSessionService {
-    private final ClassSessionRepository classSessionRepository;
+public class LessonService {
+    private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
 
     public void addExerciseToSession(Long sessionId, ExerciseDto exerciseDto) {
-        Optional<ClassSession> classSession = classSessionRepository.findById(sessionId);
+        Optional<Lesson> classSession = lessonRepository.findById(sessionId);
         if (classSession.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Class session not found");
         }
         Exercise exercise = new Exercise();
         exercise.setExerciseNumber(exerciseDto.getExerciseNumber());
         exercise.setSubpoint(exerciseDto.getSubpoint());
-        exercise.setClassSession(classSession.get());
+        exercise.setLesson(classSession.get());
         exerciseRepository.save(exercise);
 
     }
 
-    public ClassSessionDto getNextSession(Long groupId){
-        Optional<ClassSession> session = classSessionRepository.findTopByClassGroup_IdAndClassDateAfterOrderByClassDateAsc(groupId, LocalDateTime.now());
+    public LessonDto getNextSession(Long groupId){
+        Optional<Lesson> session = lessonRepository.findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(groupId, LocalDateTime.now());
         if (session.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There are no future sessions added for thsi group");
         }
-        return new ClassSessionDto(session.get());
+        return new LessonDto(session.get());
     }
 }

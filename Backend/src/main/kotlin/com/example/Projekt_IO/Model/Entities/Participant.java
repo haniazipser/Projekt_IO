@@ -6,11 +6,15 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class StudentGroup {
+@Table (name = "participant")
+public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     private String email;
     @ManyToOne
-    private ClassGroup classGroup;
+    private Course course;
+
+    @Enumerated(EnumType.STRING)
+    private InvitationStatus invitationStatus;
 }

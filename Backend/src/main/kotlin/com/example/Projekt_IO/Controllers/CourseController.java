@@ -1,13 +1,11 @@
 package com.example.Projekt_IO.Controllers;
 
-import com.example.Projekt_IO.Model.Dtos.ClassGroupDto;
-import com.example.Projekt_IO.Model.Dtos.NewGroupDto;
-import com.example.Projekt_IO.Services.GroupClassApplicationService;
-import com.example.Projekt_IO.Services.GroupClassService;
+import com.example.Projekt_IO.Model.Dtos.CourseDto;
+import com.example.Projekt_IO.Model.Dtos.NewCourseDto;
+import com.example.Projekt_IO.Services.CourseApplicationService;
+import com.example.Projekt_IO.Services.CourseService;
 import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -15,20 +13,20 @@ import java.util.Set;
 @RestController
 @RequestMapping("/group")
 @RequiredArgsConstructor
-public class ClassGroupController {
+public class CourseController {
     //komentarz
 
-    private final GroupClassService groupClassService;
-    private final GroupClassApplicationService groupClassApplicationService;
+    private final CourseService groupClassService;
+    private final CourseApplicationService courseApplicationService;
     private final UserInfoService userInfoService;
     @PostMapping("/create")
-    public void createGroup(@RequestBody NewGroupDto groupDto){
+    public void createGroup(@RequestBody NewCourseDto groupDto){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         groupClassService.createGroup(email, groupDto);
     }
 
     @GetMapping("/groups")
-    public Set<ClassGroupDto> getStudentGroups(){
+    public Set<CourseDto> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         System.out.println(email);
         return groupClassService.getUsersGroups(email);
@@ -41,7 +39,7 @@ public class ClassGroupController {
 
     @PostMapping("/{email}/{groupId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
     public void addStudentToGroup(@PathVariable String email, @PathVariable Long groupId){
-        groupClassApplicationService.addStudentToGroup(email, groupId);
+        courseApplicationService.addStudentToGroup(email, groupId);
     }
 
     @DeleteMapping("/{email}/{groupId}")
@@ -49,4 +47,9 @@ public class ClassGroupController {
         groupClassService.deleteStudentFromGroup(email,groupId);
     }
 
+    @PostMapping("/accept")
+    public void acceptInvitation(@RequestParam Long groupId) {
+        String email = userInfoService.getLoggedUserInfo().getEmail();
+        groupClassService.acceptInvite(email, groupId);
+    }
 }

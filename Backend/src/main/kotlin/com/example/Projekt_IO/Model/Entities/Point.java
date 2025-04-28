@@ -6,15 +6,15 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(name = "activity")
-public class Activity {
+@Table(name = "point")
+public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String student;
     @ManyToOne
     private Exercise source;
-    private Double activityValue;
-    public Activity(){};
+    private Double activityValue;//jesli zmieniam nazwe tutaj
+    public Point(){};
 
 }

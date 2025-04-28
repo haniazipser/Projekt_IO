@@ -11,10 +11,10 @@ import java.time.LocalTime;
 
 @Embeddable
 @Getter @Setter
-public class ClassTime {
+public class LessonTime {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
 
     private LocalTime time;
-    public ClassTime(){};
+    public LessonTime(){};
 }

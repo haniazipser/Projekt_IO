@@ -1,7 +1,7 @@
 package com.example.Projekt_IO.Controllers;
 
-import com.example.Projekt_IO.Services.ActivityService;
-import com.example.Projekt_IO.Model.Dtos.ActivityDto;
+import com.example.Projekt_IO.Services.PointService;
+import com.example.Projekt_IO.Model.Dtos.PointDto;
 import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,25 +11,25 @@ import java.util.Set;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/activity")
-public class UserActivityController {
-    private final ActivityService activityService;
+public class PointController {
+    private final PointService pointService;
     private final UserInfoService userInfoService;
     @GetMapping("")
-    public Set<ActivityDto> getUsersActivity(){
+    public Set<PointDto> getUsersActivity(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return activityService.getUsersActivity(email);
+        return pointService.getUsersActivity(email);
     }
 
     @GetMapping("/{groupId}")
-    public Set<ActivityDto> getUsersActivityInGroupClass( @PathVariable Long groupId){
+    public Set<PointDto> getUsersActivityInGroupClass(@PathVariable Long groupId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return activityService.getUsersActivityInGroupClass(email,groupId);
+        return pointService.getUsersActivityInGroupClass(email,groupId);
     }
 
     @PostMapping("")//wysylasz mi z formularza obiekt z polami jak ma activity dto
-    public void addStudentActivity( @RequestBody ActivityDto activity){
+    public void addStudentActivity( @RequestBody PointDto activity){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        activityService.addStudentActivity(email,activity);
+        pointService.addStudentActivity(email,activity);
     }
 
 }

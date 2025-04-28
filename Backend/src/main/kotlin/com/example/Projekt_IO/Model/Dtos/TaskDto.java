@@ -1,7 +1,5 @@
 package com.example.Projekt_IO.Model.Dtos;
 
-import com.example.Projekt_IO.Model.Entities.ClassTime;
-import com.example.Projekt_IO.Model.Entities.Exercise;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,5 +13,4 @@ public class TaskDto {
     private LocalDateTime dueDate;
     private Integer numberOfDeclarations;
     private Set<ExerciseDto> assigned;
-
 }

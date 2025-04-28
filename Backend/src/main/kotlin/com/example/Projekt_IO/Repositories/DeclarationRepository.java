@@ -13,7 +13,7 @@ public interface DeclarationRepository extends JpaRepository<ExerciseDeclaration
     Set<ExerciseDeclaration> findByStudent(String email);
     Set<ExerciseDeclaration> findByExercise_Id(Long exerciseId);
 
-    Set<ExerciseDeclaration> findByStudentAndExerciseClassSession_Id(String email, Long id);
+    Set<ExerciseDeclaration> findByStudentAndExerciseLesson_Id(String email, Long id);
 
-    Integer countByStudentAndExerciseClassSession_Id(String email, Long id);
+    Integer countByStudentAndExerciseLesson_Id(String email, Long id);
 }

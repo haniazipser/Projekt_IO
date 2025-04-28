@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public class DeclarationService {
         Optional<Exercise> exercise = exerciseRepository.findById(exerciseId);
         if (exercise.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found");
-        }else if(exercise.get().getClassSession().getClassDate().isBefore(LocalDateTime.now())){
+        }else if(exercise.get().getLesson().getClassDate().isBefore(LocalDateTime.now())){
             throw new IllegalStateException("You can not declare exercises from past class sessions");
         }//MOZEMY DODAC ZE DEKLAROWAC MOZNA TYLKO 24 GODZ PRZED
         ///SPRAWDZIC CZY STUDENT NALEZY DO GRUPY ZAJECIOWEJ Z KTOREJ JEST TO ZADANIE
@@ -56,10 +55,10 @@ public class DeclarationService {
     }
 
     public Set<DeclarationDto> getUsersDeclarationsForSession(String email, Long id) {
-        return declarationRepository.findByStudentAndExerciseClassSession_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+        return declarationRepository.findByStudentAndExerciseLesson_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
     }
 
     public Integer getDeclarationsForSessionCount(String email, Long id) {
-        return declarationRepository.countByStudentAndExerciseClassSession_Id(email,id);
+        return declarationRepository.countByStudentAndExerciseLesson_Id(email,id);
     }
 }
