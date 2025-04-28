@@ -19,7 +19,7 @@ public class Lesson {
     private LocalDateTime classDate;
     @ManyToOne
     private Course course;
-    @OneToMany(mappedBy = "lesson")
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exercise> lessonExercises;
 
     @PrePersist

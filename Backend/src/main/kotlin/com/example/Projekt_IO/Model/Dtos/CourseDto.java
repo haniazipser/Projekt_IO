@@ -23,7 +23,9 @@ public class CourseDto {
         this.instructor = group.getInstructor();
         this.creator = group.getCreator();
         this.lessonTimes = group.getLessonTimes();
-        this.lessons = group.getLessons().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
+        if (group.getLessons() != null) {
+            this.lessons = group.getLessons().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
+        }
     }
 
 

@@ -34,4 +34,5 @@ public class Exercise {
             id = UUID.randomUUID();
         }
     }
+
 }

@@ -20,6 +20,8 @@ public class LessonDto {
         this.id = lesson.getId();
         this.classDate = lesson.getClassDate();
         this.courseName = lesson.getCourse().getName();
-        this.exercises = lesson.getLessonExercises().stream().map(e -> new ExerciseDto(e)).collect(Collectors.toList());
+        if (lesson.getLessonExercises()!= null) {
+            this.exercises = lesson.getLessonExercises().stream().map(e -> new ExerciseDto(e)).collect(Collectors.toList());
+        }
     }
 }

@@ -33,13 +33,18 @@ public class CourseService {
       return courseRepository.findDistinctByStudents_Email(email).stream().map(g -> new CourseDto(g)).collect(Collectors.toSet());
     }
 
-    public void createGroup(String email, NewCourseDto groupDto) {
+    public CourseDto createCourse(String email, NewCourseDto courseDto) {
         Course course = new Course();
         course.setCreator(email);
-        course.setLessonTimes(groupDto.getLessonTimes());
-        course.setName(groupDto.getName());
-        course.setInstructor(groupDto.getInstructor());
-        courseRepository.save(course);
+        course.setLessonTimes(courseDto.getLessonTimes());
+        course.setName(courseDto.getName());
+        course.setInstructor(courseDto.getInstructor());
+        Participant participant = new Participant();
+        course = courseRepository.save(course);
+        participant.setCourse(course);
+        participant.setEmail(email);
+        participantRepository.save(participant);
+        return new CourseDto(course);
     }
 
     public void addStudentToGroup(String email, UUID groupId) {
