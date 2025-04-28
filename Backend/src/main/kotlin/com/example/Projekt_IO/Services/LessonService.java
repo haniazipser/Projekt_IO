@@ -67,4 +67,14 @@ public class LessonService {
         }
         return new LessonDto(lesson.get());
     }
+
+    public void deleteLesson(UUID lessonId) {
+        Optional<Lesson> lesson = lessonRepository.findById(lessonId);
+        if (lesson.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This lesson does not exist");
+        } else if (lesson.get().getClassDate().isBefore(LocalDateTime.now())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not delete lesson from the past");
+        }
+        lessonRepository.delete(lesson.get());
+    }
 }

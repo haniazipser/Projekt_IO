@@ -30,4 +30,10 @@ public class LessonController {
     public LessonDto createNewLessonForCourse(@PathVariable UUID courseId, @PathVariable Integer numberOfExercises){
         return lessonService.createNewLesson(courseId,numberOfExercises);
     }
+
+    @DeleteMapping("/{lessonId}")
+    public void deleteLesson(@PathVariable UUID lessonId){
+        lessonService.deleteLesson(lessonId);
+    }
+
 }

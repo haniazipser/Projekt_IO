@@ -14,7 +14,6 @@ public class NewCourseDto {
     private UUID id;
     private String name;
     private String  instructor;
-    private String creator;
     private Set<LessonTime> lessonTimes;
     public NewCourseDto(){}
 }

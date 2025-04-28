@@ -16,7 +16,7 @@ VALUES
 INSERT INTO exercise (id,lesson_id, exercise_number, subpoint, approved_student)
 VALUES
 ('f3b08d44-76d6-41bf-936e-392c90a63307','b0e58980-811a-4832-89c8-ccf4a60bf4be', 1, 'a', 'johndoe@gmail.com'),
-('5cbf7d41-744a-46c1-84e3-988e37693436','b0e58980-811a-4832-89c8-ccf4a60bf4be', 2, NULL, 'janesmith@gmail.com'),
+('5cbf7d41-744a-46c1-84e3-988e37693436','b0e58980-811a-4832-89c8-ccf4a60bf4be', 2, NULL, NULL),
 ('bacba752-8fef-4b0d-8c9e-2325e4933e0b','5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 1, NULL, 'AliceBrown@gmail.com');
 
 INSERT INTO exercise_declaration (id, declaration_date, declaration_status, exercise_id, student)
@@ -34,3 +34,4 @@ INSERT INTO participant(id, email, course_id, invitation_status) values
 ('f2da439f-ddbc-4151-ba82-04cb46f9dd2e','johndoe@gmail.com', '3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'ACCEPTED'),
 ('cb8585d5-0a9c-4fe8-a81e-4d14f0d3b795','janesmith@gmail.com', '3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'ACCEPTED'),
 ('d9534897-596e-4458-8417-4525f92ff8b2','johndoe@gmail.com', 'e5965121-1fae-428c-a13f-4e6c741db180', 'ACCEPTED');
+

@@ -21,9 +21,9 @@ public class CourseController {
     private final CourseApplicationService courseApplicationService;
     private final UserInfoService userInfoService;
     @PostMapping("/create")
-    public void createGroup(@RequestBody NewCourseDto groupDto){
+    public CourseDto createGroup(@RequestBody NewCourseDto newCourseDto){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        groupClassService.createGroup(email, groupDto);
+        return groupClassService.createCourse(email, newCourseDto);
     }
 
     @GetMapping("/courses")
