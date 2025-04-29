@@ -6,6 +6,7 @@ import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,10 +23,16 @@ public class PointController {
     }
 
     @GetMapping("/{courseId}")
-    public Set<PointDto> getUsersActivityInGroupClass(@PathVariable UUID courseId){
+    public List<PointDto> getUsersActivityInCourse(@PathVariable UUID courseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return pointService.getUsersActivityInGroupClass(email,courseId);
+        return pointService.getUsersActivityInCourse(email,courseId);
     }
+
+    @GetMapping("/{courseId}/howMany")
+    public int getNumberOfPointsInCourse(@PathVariable UUID courseId){
+        return getUsersActivityInCourse(courseId).size();
+    }
+
 
     @PostMapping("")//wysylasz mi z formularza obiekt z polami jak ma activity dto
     public void addStudentActivity( @RequestBody PointDto activity){

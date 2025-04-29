@@ -4,6 +4,7 @@ import com.example.Projekt_IO.Model.Entities.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -11,5 +12,5 @@ import java.util.UUID;
 public interface PointRepository extends JpaRepository<Point, UUID> {
     Set<Point> findByStudent(String email);
 
-    Set<Point> findByStudentAndSource_Id(String email, UUID groupId);
+    Set<Point> findByStudentAndLesson_Course_Id(String email, UUID courseId);
 }
