@@ -1,6 +1,7 @@
 package com.example.Projekt_IO.Services;
 
 import com.example.Projekt_IO.Model.Dtos.CourseDto;
+import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.NewCourseDto;
 import com.example.Projekt_IO.Model.Dtos.UserDto;
 import com.example.Projekt_IO.Model.Entities.Course;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -93,25 +95,19 @@ public class CourseService {
     }
 
     public Set<String> getStudentsInGroup(UUID groupId) {
-        Optional<Course> classGroup = courseRepository.findById(groupId);
+        Optional<Course> course = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
-        if (classGroup.isEmpty()) {
+        if (course.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
         }
 
-        boolean found = false;
-        for (Participant student : classGroup.get().getStudents()){
-            if (student.getEmail().toLowerCase().equals(loggedUser.getEmail())&& student.getInvitationStatus() == InvitationStatus.ACCEPTED){
-                found = true;
-                break;
-            }
-        }
-        if (!found){
+
+        if (!course.get().isStudenAMemebr(loggedUser.getEmail())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not a member of this group");
         }
 
-        return classGroup.get().getStudents().stream().map(s -> s.getEmail()).collect(Collectors.toSet());
+        return course.get().getStudents().stream().map(s -> s.getEmail()).collect(Collectors.toSet());
     }
 
     public CourseDto getGroupInfo(UUID groupId){
@@ -124,4 +120,6 @@ public class CourseService {
         participant.setInvitationStatus(InvitationStatus.ACCEPTED);
         participantRepository.save(participant);
     }
+
+
 }

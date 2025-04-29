@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,5 +77,18 @@ public class LessonService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not delete lesson from the past");
         }
         lessonRepository.delete(lesson.get());
+    }
+
+    public List<LessonDto> getLessonsForCourse(UUID courseId, String email) {
+        Optional<Course> course = courseRepository.findById(courseId);
+        if (course.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found");
+        } else if (!course.get().isStudenAMemebr(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not a member of this course");
+        }
+
+        return lessonRepository.findByCourse(course.get()).stream()
+                .sorted(Comparator.comparing(Lesson::getClassDate))
+                .map(l -> new LessonDto(l)).collect(Collectors.toList());
     }
 }
