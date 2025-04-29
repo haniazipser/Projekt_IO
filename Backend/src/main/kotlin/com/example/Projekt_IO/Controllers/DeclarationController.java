@@ -43,4 +43,9 @@ public class DeclarationController {
     public void runMatchingAlgorithm(){
         declarationService.runMatchingAlgorithm();
     }
+
+    @DeleteMapping("/{declarationId}")
+    public void deleteDeclaration (@PathVariable UUID declarationId){
+        declarationService.deleteDeclaration (declarationId);
+    }
 }

@@ -66,4 +66,14 @@ public class DeclarationService {
     public Set<DeclarationDto> getUsersDeclarationsInCourse(String email, UUID courseId) {
         return declarationRepository.findByStudentAndExerciseLessonCourse_Id(email,courseId).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
     }
+
+    public void deleteDeclaration(UUID declarationId) {
+        Optional<ExerciseDeclaration> declaration = declarationRepository.findById(declarationId);
+        if (declaration.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Declaration not found");
+        } else if (declaration.get().getDeclarationStatus() == DeclarationStatus.APPROVED){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not modify this declaration");
+        }
+        declarationRepository.delete(declaration.get());
+    }
 }
