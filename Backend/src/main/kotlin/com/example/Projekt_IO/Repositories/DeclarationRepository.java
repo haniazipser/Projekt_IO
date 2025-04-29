@@ -15,9 +15,9 @@ public interface DeclarationRepository extends JpaRepository<ExerciseDeclaration
     Set<ExerciseDeclaration> findByStudent(String email);
     Set<ExerciseDeclaration> findByExercise_Id(UUID exerciseId);
 
-    Set<ExerciseDeclaration> findByStudentAndExerciseLesson_Id(String email, UUID id);
+    Set<ExerciseDeclaration> findByStudentAndExercise_Lesson_Id(String email, UUID id);
 
-    Integer countByStudentAndExerciseLesson_Id(String email, UUID id);
+    Integer countByStudentAndExercise_Lesson_Id(String email, UUID id);
 
-    Set<ExerciseDeclaration> findByStudentAndExerciseLessonCourse_Id(String email, UUID courseId);
+    Set<ExerciseDeclaration> findByStudentAndExercise_Lesson_Course_Id(String email, UUID courseId);
 }
