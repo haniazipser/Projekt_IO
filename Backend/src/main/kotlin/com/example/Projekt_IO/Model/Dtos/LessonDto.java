@@ -16,6 +16,7 @@ public class LessonDto {
     private LocalDateTime classDate;
     private String courseName;
     private List<ExerciseDto> exercises;
+    private LessonStatus status;
     public LessonDto(Lesson lesson){
         this.id = lesson.getId();
         this.classDate = lesson.getClassDate();
@@ -23,5 +24,6 @@ public class LessonDto {
         if (lesson.getLessonExercises()!= null) {
             this.exercises = lesson.getLessonExercises().stream().map(e -> new ExerciseDto(e)).collect(Collectors.toList());
         }
+        this.status = lesson.getLessonStatus();
     }
 }

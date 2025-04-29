@@ -4,6 +4,7 @@ import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Services.LessonService;
 import com.example.Projekt_IO.Services.ExerciseService;
+import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class LessonController {
     private final ExerciseService exerciseService;
     private final LessonService lessonService;
+    private final UserInfoService userInfoService;
     @GetMapping("/{lessonId}/exercises")
     public List<ExerciseDto> getExercisesForLesson(@PathVariable UUID lessonId){
         return exerciseService.getExercisesForLesson(lessonId);
@@ -36,4 +38,9 @@ public class LessonController {
         lessonService.deleteLesson(lessonId);
     }
 
+    @GetMapping("/{courseId}/lessons")
+    public List<LessonDto> getLessonsForCourse (@PathVariable UUID courseId){
+        String email = userInfoService.getLoggedUserInfo().getEmail();
+        return lessonService.getLessonsForCourse(courseId, email);
+    }
 }

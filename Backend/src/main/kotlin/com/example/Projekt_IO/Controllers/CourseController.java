@@ -1,6 +1,7 @@
 package com.example.Projekt_IO.Controllers;
 
 import com.example.Projekt_IO.Model.Dtos.CourseDto;
+import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.NewCourseDto;
 import com.example.Projekt_IO.Services.CourseApplicationService;
 import com.example.Projekt_IO.Services.CourseService;
@@ -8,6 +9,7 @@ import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,25 +19,25 @@ import java.util.UUID;
 public class CourseController {
     //komentarz
 
-    private final CourseService groupClassService;
+    private final CourseService courseService;
     private final CourseApplicationService courseApplicationService;
     private final UserInfoService userInfoService;
     @PostMapping("/create")
     public CourseDto createGroup(@RequestBody NewCourseDto newCourseDto){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return groupClassService.createCourse(email, newCourseDto);
+        return courseService.createCourse(email, newCourseDto);
     }
 
     @GetMapping("/courses")
     public Set<CourseDto> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         System.out.println(email);
-        return groupClassService.getUsersGroups(email);
+        return courseService.getUsersGroups(email);
     }
 
     @GetMapping("{courseId}/students")
     public Set<String> getStudentsInGroup(@PathVariable UUID courseId){
-        return groupClassService.getStudentsInGroup(courseId);
+        return courseService.getStudentsInGroup(courseId);
     }
 
     @PostMapping("/{email}/{courseId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
@@ -45,12 +47,12 @@ public class CourseController {
 
     @DeleteMapping("/{email}/{courseId}")
     public void deleteStudentFromGroup(@PathVariable String email, @PathVariable UUID courseId){
-        groupClassService.deleteStudentFromGroup(email,courseId);
+        courseService.deleteStudentFromGroup(email,courseId);
     }
 
     @PostMapping("/accept")
     public void acceptInvitation(@RequestParam UUID courseId) {
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        groupClassService.acceptInvite(email, courseId);
+        courseService.acceptInvite(email, courseId);
     }
 }

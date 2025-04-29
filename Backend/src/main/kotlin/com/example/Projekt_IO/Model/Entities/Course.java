@@ -69,4 +69,15 @@ public class Course {
                 ));
     }
 
+    public boolean isStudenAMemebr(String email){
+        boolean found = false;
+        for (Participant student : students){
+            if (student.getEmail().toLowerCase().equals(email)){
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
 }
