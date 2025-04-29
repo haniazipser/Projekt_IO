@@ -56,15 +56,15 @@ public class DeclarationService {
     }
 
     public Set<DeclarationDto> getDeclarationsForLesson(String email, UUID id) {
-        return declarationRepository.findByStudentAndExerciseLesson_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+        return declarationRepository.findByStudentAndExercise_Lesson_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
     }
 
     public Integer getDeclarationsForSessionCount(String email, UUID id) {
-        return declarationRepository.countByStudentAndExerciseLesson_Id(email,id);
+        return declarationRepository.countByStudentAndExercise_Lesson_Id(email,id);
     }
 
     public Set<DeclarationDto> getUsersDeclarationsInCourse(String email, UUID courseId) {
-        return declarationRepository.findByStudentAndExerciseLessonCourse_Id(email,courseId).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+        return declarationRepository.findByStudentAndExercise_Lesson_Course_Id(email,courseId).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
     }
 
     public void deleteDeclaration(UUID declarationId) {
