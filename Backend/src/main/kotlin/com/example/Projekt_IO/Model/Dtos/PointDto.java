@@ -10,13 +10,12 @@ import java.util.UUID;
 public class PointDto {
         private UUID id;
         private String student;
-        private ExerciseDto source;
-        private Double activityValue;//zmieniam tutaj
-
+        private LessonDescriptionDto lesson;
+        private Double activityValue;
         public PointDto(Point point){
             this.id= point.getId();
             this.student = point.getStudent();
-            this.source = new ExerciseDto(point.getSource());
-            this.activityValue = point.getActivityValue();//i tutaj
+            this.lesson = new LessonDescriptionDto(point.getLesson());
+            this.activityValue = point.getActivityValue();
         }
 }

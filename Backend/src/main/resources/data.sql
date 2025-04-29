@@ -25,10 +25,10 @@ VALUES
 ('1a602a7c-3fb9-4777-8521-6405323c962f','2025-04-25 10:05:00', 'APPROVED', '5cbf7d41-744a-46c1-84e3-988e37693436', 'janesmith@gmail.com'),
 ('4c6e2fc9-0959-4a79-8992-f14cecd45a60','2025-04-25 10:10:00', 'REJECTED', '5cbf7d41-744a-46c1-84e3-988e37693436', 'AliceBrown@gmail.com');
 
-INSERT INTO point (id,student, source_id, activity_value) VALUES
-('4f5288c2-4a52-4b36-8f5a-8e32ab095922','johndoe@gmail.com', 'f3b08d44-76d6-41bf-936e-392c90a63307', 1.0),
-('230eff0a-c2a8-44c9-b33a-1520cfaa6121','janesmith@gmail.com', '5cbf7d41-744a-46c1-84e3-988e37693436', 0.5),
-('3d81c604-d41c-432f-a88c-c073a71bf165','AliceBrown@gmail.com', '5cbf7d41-744a-46c1-84e3-988e37693436', 1.0);
+INSERT INTO point (id,student, lesson_id, activity_value) VALUES
+('4f5288c2-4a52-4b36-8f5a-8e32ab095922','johndoe@gmail.com', 'b0e58980-811a-4832-89c8-ccf4a60bf4be', 1.0),
+('230eff0a-c2a8-44c9-b33a-1520cfaa6121','janesmith@gmail.com', '5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 0.5),
+('3d81c604-d41c-432f-a88c-c073a71bf165','AliceBrown@gmail.com', '5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 1.0);
 
 INSERT INTO participant(id, email, course_id, invitation_status) values
 ('f2da439f-ddbc-4151-ba82-04cb46f9dd2e','johndoe@gmail.com', '3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'ACCEPTED'),

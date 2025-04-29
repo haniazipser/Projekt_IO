@@ -18,9 +18,6 @@ public class Exercise {
     private Integer exerciseNumber;
     private String subpoint;
 
-    @OneToMany(mappedBy = "source")
-    private Set<Point> solvers;
-
     @OneToMany(mappedBy = "exercise")
     private Set<ExerciseDeclaration> declarations;
 

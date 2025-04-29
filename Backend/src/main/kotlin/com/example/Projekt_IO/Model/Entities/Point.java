@@ -14,7 +14,7 @@ public class Point {
     private UUID id;
     private String student;
     @ManyToOne
-    private Exercise source;
+    private Lesson lesson;
     private Double activityValue;//jesli zmieniam nazwe tutaj
     public Point(){};
 
