@@ -4,6 +4,7 @@ import com.example.Projekt_IO.Model.Entities.LessonTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -17,6 +18,7 @@ public class NewCourseDto {
     private String  instructor;
     private Set<LessonTime> lessonTimes;
     private Set<String> students;
-    private LocalDate endDate;
+    private Instant endDate;
+    private Instant startDate;
     public NewCourseDto(){}
 }

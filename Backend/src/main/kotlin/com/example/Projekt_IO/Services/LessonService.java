@@ -1,6 +1,5 @@
 package com.example.Projekt_IO.Services;
 
-import com.example.Projekt_IO.Model.Dtos.CourseDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
 import com.example.Projekt_IO.Model.Entities.Course;
@@ -9,17 +8,21 @@ import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.CourseRepository;
 import com.example.Projekt_IO.Repositories.LessonRepository;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LessonService {
     private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
@@ -48,20 +51,8 @@ public class LessonService {
         return new LessonDto(lesson);
     }
 
-    public void addExerciseToLesson(UUID lessonId, ExerciseDto exerciseDto) {
-        Optional<Lesson> classSession = lessonRepository.findById(lessonId);
-        if (classSession.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Class session not found");
-        }
-        Exercise exercise = new Exercise();
-        exercise.setExerciseNumber(exerciseDto.getExerciseNumber());
-        exercise.setSubpoint(exerciseDto.getSubpoint());
-        exercise.setLesson(classSession.get());
-        exerciseRepository.save(exercise);
-    }
-
     public LessonDto getNextLesson(UUID courseId){
-        Optional<Lesson> lesson = lessonRepository.findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(courseId, LocalDateTime.now());
+        Optional<Lesson> lesson = lessonRepository.findTopByCourse_IdAndClassDateAfterOrderByClassDateAsc(courseId, Instant.now());
         if (lesson.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There are no future lessons added for this group");
         }
@@ -72,7 +63,7 @@ public class LessonService {
         Optional<Lesson> lesson = lessonRepository.findById(lessonId);
         if (lesson.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This lesson does not exist");
-        } else if (lesson.get().getClassDate().isBefore(LocalDateTime.now())){
+        } else if (lesson.get().getClassDate().isBefore(Instant.now())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not delete lesson from the past");
         }
         lessonRepository.delete(lesson.get());
@@ -82,7 +73,7 @@ public class LessonService {
         Optional<Course> course = courseRepository.findById(courseId);
         if (course.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found");
-        } else if (!course.get().isStudenAMemebr(email)){
+        } else if (!course.get().isStudentAMemeber(email)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not a member of this course");
         }
 
@@ -90,4 +81,42 @@ public class LessonService {
                 .sorted(Comparator.comparing(Lesson::getClassDate))
                 .map(l -> new LessonDto(l)).collect(Collectors.toList());
     }
+
+    public void updateExercisesForLesson(LessonDto lesson) {
+        Optional<Lesson> l = lessonRepository.findById(lesson.getId());
+        if (l.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
+        }
+        Set<Exercise> exercises = exerciseRepository.findByLesson(l.get());
+        for (Exercise e : exercises){
+            if (!e.getDeclarations().isEmpty()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are already declarations in this class");
+            }
+        }
+
+        for (ExerciseDto e : lesson.getExercises()) {
+            Exercise exercise = new Exercise();
+            exercise.setLesson(l.get());
+            exercise.setExerciseNumber( e.getExerciseNumber());
+            exercise.setSubpoint(e.getSubpoint());
+            exerciseRepository.save(exercise);
+        }
+    }
+/*
+    public void updateExercisesForLesson(LessonDto lessonDto) {
+        Optional<Lesson> l = lessonRepository.findById(lessonDto.getId());
+        if (l.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
+        }
+        Lesson lesson = l.get();
+        Set<Exercise> exercises;
+        for (ExerciseDto e : lessonDto.getExercises()){
+            Exercise exercise = new Exercise();
+            exercise.setLesson(lesson);
+            exercise.setExerciseNumber(e.getExerciseNumber());
+            exercise.setSubpoint(e.getSubpoint());
+            exerciseRepository.save()
+        }
+
+    }*/
 }

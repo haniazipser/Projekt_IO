@@ -5,6 +5,7 @@ import com.example.Projekt_IO.Model.Entities.LessonTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,7 +20,8 @@ public class CourseDto {
     private String creator;
     private Set<LessonTime> lessonTimes;
     private Set<LessonDto> lessons;
-    private LocalDate endDate;
+    private Instant startDate;
+    private Instant endDate;
     public CourseDto(Course course){
         this.id = course.getId();
         this.name = course.getName();
@@ -30,6 +32,7 @@ public class CourseDto {
             this.lessons = course.getLessons().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
         }
         this.endDate = course.getEndDate();
+        this.startDate = course.getStartDate();
     }
 
 
