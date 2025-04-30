@@ -16,5 +16,18 @@ func swiftDateToIsoString(_ date: Date) -> String {
     return isoString
 }
 
+func absoluteUserFriendlyDate(from date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .medium
+    formatter.timeStyle = .short
+    formatter.locale = Locale.current
+    let formattedDate = formatter.string(from: date)
+    
+    // Split the formatted date into date and time components
+    let components = formattedDate.split(separator: ",")
+    
+    // Combine the date with 'at' before the time part
+    return "\(components[0])\(components[1]), at\(components[2])"
+}
 
 
