@@ -9,5 +9,7 @@ func isoStringToSwiftDate(_ isoString: String) -> Date? {
 func swiftDateToIsoString(_ date: Date) -> String {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    return formatter.string(from: date)
+    var isoString = formatter.string(from: date)
+    isoString.removeLast()
+    return isoString
 }

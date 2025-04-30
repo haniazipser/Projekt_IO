@@ -5,5 +5,5 @@ fun isoStringToKotlinDateTime(isoString: String): LocalDateTime {
 }
 
 fun kotlinDateTimeToIsoString(dateTime: LocalDateTime): String {
-    return dateTime.toString()
+    return dateTime.toString().append("Z")
 }
