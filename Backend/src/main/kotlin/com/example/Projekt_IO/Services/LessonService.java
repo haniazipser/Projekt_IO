@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LessonService {
     private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
@@ -47,18 +49,6 @@ public class LessonService {
         lesson.setLessonExercises(exercises);
 
         return new LessonDto(lesson);
-    }
-
-    public void addExerciseToLesson(UUID lessonId, ExerciseDto exerciseDto) {
-        Optional<Lesson> classSession = lessonRepository.findById(lessonId);
-        if (classSession.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Class session not found");
-        }
-        Exercise exercise = new Exercise();
-        exercise.setExerciseNumber(exerciseDto.getExerciseNumber());
-        exercise.setSubpoint(exerciseDto.getSubpoint());
-        exercise.setLesson(classSession.get());
-        exerciseRepository.save(exercise);
     }
 
     public LessonDto getNextLesson(UUID courseId){
@@ -90,6 +80,27 @@ public class LessonService {
         return lessonRepository.findByCourse(course.get()).stream()
                 .sorted(Comparator.comparing(Lesson::getClassDate))
                 .map(l -> new LessonDto(l)).collect(Collectors.toList());
+    }
+
+    public void updateExercisesForLesson(LessonDto lesson) {
+        Optional<Lesson> l = lessonRepository.findById(lesson.getId());
+        if (l.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
+        }
+        Set<Exercise> exercises = exerciseRepository.findByLesson(l.get());
+        for (Exercise e : exercises){
+            if (!e.getDeclarations().isEmpty()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are already declarations in this class");
+            }
+        }
+
+        for (ExerciseDto e : lesson.getExercises()) {
+            Exercise exercise = new Exercise();
+            exercise.setLesson(l.get());
+            exercise.setExerciseNumber( e.getExerciseNumber());
+            exercise.setSubpoint(e.getSubpoint());
+            exerciseRepository.save(exercise);
+        }
     }
 /*
     public void updateExercisesForLesson(LessonDto lessonDto) {

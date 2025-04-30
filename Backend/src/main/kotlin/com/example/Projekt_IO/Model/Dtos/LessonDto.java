@@ -27,4 +27,6 @@ public class LessonDto {
         }
         this.status = lesson.getLessonStatus();
     }
+
+    public LessonDto(){};
 }

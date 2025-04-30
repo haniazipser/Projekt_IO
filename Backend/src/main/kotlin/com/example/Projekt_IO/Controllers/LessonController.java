@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/lesson")
 public class LessonController {
     private final ExerciseService exerciseService;
     private final LessonService lessonService;
@@ -21,16 +22,6 @@ public class LessonController {
     @GetMapping("/{lessonId}/exercises")
     public List<ExerciseDto> getExercisesForLesson(@PathVariable UUID lessonId){
         return exerciseService.getExercisesForLesson(lessonId);
-    }
-
-    @PostMapping("/{lessonId}/addExercise")
-    public void addExerciseToLesson(@PathVariable UUID lessonId, @RequestBody ExerciseDto exercise){
-        lessonService.addExerciseToLesson(lessonId,exercise);
-    }
-
-    @PostMapping("/create/{courseId}/{numberOfExercises}")
-    public LessonDto createNewLessonForCourse(@PathVariable UUID courseId, @PathVariable Integer numberOfExercises){
-        return lessonService.createNewLesson(courseId,numberOfExercises);
     }
 
     @DeleteMapping("/{lessonId}")
@@ -44,8 +35,8 @@ public class LessonController {
         return lessonService.getLessonsForCourse(courseId, email);
     }
 
-   /*@PutMapping("/exercises")
+   @PutMapping("/exercises")
     public void updateExercisesForLesson(@RequestBody LessonDto lesson){
         lessonService.updateExercisesForLesson(lesson);
-    }*/
+    }
 }
