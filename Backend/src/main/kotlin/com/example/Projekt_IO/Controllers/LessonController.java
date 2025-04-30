@@ -43,4 +43,11 @@ public class LessonController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return lessonService.getLessonsForCourse(courseId, email);
     }
+
+   /* @PutMapping("/{lessonId}/exercises")
+    public updateExercisesForLesson{
+
+    }
+
+    */
 }
