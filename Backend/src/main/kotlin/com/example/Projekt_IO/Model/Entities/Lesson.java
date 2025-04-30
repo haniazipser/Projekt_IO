@@ -22,7 +22,7 @@ public class Lesson {
     @ManyToOne
     private Course course;
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Exercise> lessonExercises;
+    private Set<Exercise> lessonExercises;
 
     @PrePersist
     public void generateId() {
@@ -41,5 +41,9 @@ public class Lesson {
         } else {
             return LessonStatus.FUTURE;
         }
+    }
+
+    public long getHoursToLesson(){
+        return Duration.between(LocalDateTime.now(), classDate).toHours();
     }
 }

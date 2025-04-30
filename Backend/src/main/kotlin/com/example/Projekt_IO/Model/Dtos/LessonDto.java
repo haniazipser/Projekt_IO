@@ -15,14 +15,14 @@ public class LessonDto {
     private UUID id;
     private LocalDateTime classDate;
     private String courseName;
-    private List<ExerciseDto> exercises;
+    private Set<ExerciseDto> exercises;
     private LessonStatus status;
     public LessonDto(Lesson lesson){
         this.id = lesson.getId();
         this.classDate = lesson.getClassDate();
         this.courseName = lesson.getCourse().getName();
         if (lesson.getLessonExercises()!= null) {
-            this.exercises = lesson.getLessonExercises().stream().map(e -> new ExerciseDto(e)).collect(Collectors.toList());
+            this.exercises = lesson.getLessonExercises().stream().map(e -> new ExerciseDto(e)).collect(Collectors.toSet());
         }
         this.status = lesson.getLessonStatus();
     }
