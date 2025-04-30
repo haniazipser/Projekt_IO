@@ -4,13 +4,13 @@ import com.example.Projekt_IO.Model.Dtos.CourseDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.NewCourseDto;
 import com.example.Projekt_IO.Model.Dtos.UserDto;
-import com.example.Projekt_IO.Model.Entities.Course;
+import com.example.Projekt_IO.Model.Entities.*;
 
-import com.example.Projekt_IO.Model.Entities.InvitationStatus;
-import com.example.Projekt_IO.Model.Entities.Participant;
 import com.example.Projekt_IO.Repositories.CourseRepository;
 
+import com.example.Projekt_IO.Repositories.LessonRepository;
 import com.example.Projekt_IO.Repositories.ParticipantRepository;
+import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final ParticipantRepository participantRepository;
+    private final LessonRepository lessonRepository;
     private final UserInfoService userInfoService;
     Logger logger = LoggerFactory.getLogger(CourseService.class);
     public Set<CourseDto> getUsersGroups (String email){
@@ -41,8 +43,28 @@ public class CourseService {
         course.setLessonTimes(courseDto.getLessonTimes());
         course.setName(courseDto.getName());
         course.setInstructor(courseDto.getInstructor());
-        Participant participant = new Participant();
+
         course = courseRepository.save(course);
+
+        Set<Lesson> lessons = new TreeSet<>(Comparator.comparing(Lesson::getClassDate));
+
+        LocalDate endDate = courseDto.getEndDate();
+        LocalDateTime end = endDate.atStartOfDay();
+        for (LessonTime lessonTime : course.getLessonTimes()) {
+            LocalDateTime next = course.calculateNextOccurrence(lessonTime);
+            System.out.println("Dodaję lekcję: " + next);
+            while (next.isBefore(end)){
+                Lesson lesson = new Lesson();
+                lesson.setClassDate(next);
+                lesson.setCourse(course);
+                lessonRepository.save(lesson);
+                lessons.add(lesson);
+                next  = next.plusDays(7);
+            }
+        }
+        course.setLessons(lessons);
+
+        Participant participant = new Participant();
         participant.setCourse(course);
         participant.setEmail(email);
         participantRepository.save(participant);
@@ -50,48 +72,38 @@ public class CourseService {
     }
 
     public void addStudentToGroup(String email, UUID groupId) {
-        Optional<Course> classGroup = courseRepository.findById(groupId);
+        Optional<Course> course = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
-        if (classGroup.isEmpty()){
+        if (course.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }else if (!classGroup.get().getCreator().toLowerCase().equals( loggedUser.getEmail().toLowerCase())){
+        }else if (!course.get().getCreator().toLowerCase().equals( loggedUser.getEmail().toLowerCase())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to add students to this group");
-        }
-
-        for (Participant sg : classGroup.get().getStudents()){
-            if (sg.getEmail().equals(email)){
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "This student is already in this group");
-            }
+        }else if (course.get().isStudenAMemebr(email)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This student is already a member");
         }
 
         Participant participant = new Participant();
         participant.setInvitationStatus(InvitationStatus.WAITING);
         participant.setEmail(email);
-        participant.setCourse(classGroup.get());
+        participant.setCourse(course.get());
 
         participantRepository.save(participant);
     }
 
     public void deleteStudentFromGroup(String email, UUID groupId) {
-        Optional<Course> classGroup = courseRepository.findById(groupId);
+        Optional<Course> course = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
-        if (classGroup.isEmpty()){
+        if (course.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }else if (!classGroup.get().getCreator().toLowerCase().equals(  loggedUser.getEmail().toLowerCase().toLowerCase())){
+        }else if (!course.get().getCreator().toLowerCase().equals(  loggedUser.getEmail().toLowerCase().toLowerCase())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to delete students to this group");
+        }else if (!course.get().isStudenAMemebr(email)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This student is not a member");
         }
-        boolean found = false;
-        for (Participant sg : classGroup.get().getStudents()){
-            if (sg.getEmail().equals(email)){
-                participantRepository.delete(sg);
-                found = true;
-                break;
-            }
-        }
-        if (!found){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "This student is not in this group");
-        }
+
+        Participant participant = participantRepository.findByEmailAndCourse_Id(email,groupId);
+        participantRepository.delete(participant);
     }
 
     public Set<String> getStudentsInGroup(UUID groupId) {
@@ -100,10 +112,7 @@ public class CourseService {
 
         if (course.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }
-
-
-        if (!course.get().isStudenAMemebr(loggedUser.getEmail())){
+        }else if (!course.get().isStudenAMemebr(loggedUser.getEmail())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not a member of this group");
         }
 

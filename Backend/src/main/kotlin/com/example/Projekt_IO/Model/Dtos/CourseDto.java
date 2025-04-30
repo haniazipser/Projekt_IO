@@ -5,6 +5,8 @@ import com.example.Projekt_IO.Model.Entities.LessonTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -17,15 +19,17 @@ public class CourseDto {
     private String creator;
     private Set<LessonTime> lessonTimes;
     private Set<LessonDto> lessons;
-    public CourseDto(Course group){
-        this.id = group.getId();
-        this.name = group.getName();
-        this.instructor = group.getInstructor();
-        this.creator = group.getCreator();
-        this.lessonTimes = group.getLessonTimes();
-        if (group.getLessons() != null) {
-            this.lessons = group.getLessons().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
+    private LocalDate endDate;
+    public CourseDto(Course course){
+        this.id = course.getId();
+        this.name = course.getName();
+        this.instructor = course.getInstructor();
+        this.creator = course.getCreator();
+        this.lessonTimes = course.getLessonTimes();
+        if (course.getLessons() != null) {
+            this.lessons = course.getLessons().stream().map(s -> new LessonDto(s)).collect(Collectors.toSet());
         }
+        this.endDate = course.getEndDate();
     }
 
 

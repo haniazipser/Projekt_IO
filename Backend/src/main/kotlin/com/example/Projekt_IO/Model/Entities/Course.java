@@ -26,11 +26,14 @@ public class Course {
     private Set<LessonTime> lessonTimes;
 
     @OneToMany(mappedBy = "course")
+    @OrderBy("classDate ASC")
     private Set<Lesson> lessons;
 
     //private Set<String> students;
     @OneToMany(mappedBy = "course")
     private Set<Participant> students;
+
+    private LocalDate endDate;
 
     @PrePersist
     public void generateId() {
@@ -42,7 +45,8 @@ public class Course {
 
     public Course(){}
 
-    public LocalDateTime calculateNextOccurrence(LessonTime lessonTime, LocalDateTime now) {
+    public LocalDateTime calculateNextOccurrence(LessonTime lessonTime) {
+        LocalDateTime now = LocalDateTime.now();
         DayOfWeek targetDay = lessonTime.getDayOfWeek();
         LocalTime targetTime = lessonTime.getTime();
 
@@ -60,9 +64,8 @@ public class Course {
     }
 
     public LocalDateTime findNextLessonDate() {
-        LocalDateTime now = LocalDateTime.now();
-        return lessonTimes.stream()
-                .map(classTime -> calculateNextOccurrence(classTime, now))
+        return lessonTimes.stream()//dla kazdego dnia nastepne wystapienie
+                .map(classTime -> calculateNextOccurrence(classTime))
                 .min(LocalDateTime::compareTo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT,
                         "Calendar for this sourse is empty"

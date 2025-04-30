@@ -28,9 +28,12 @@ public class DeclarationService {
         if (exercise.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found");
         }else if(exercise.get().getLesson().getClassDate().isBefore(LocalDateTime.now())){
-            throw new IllegalStateException("You can not declare exercises from past class lessons");
-        }//MOZEMY DODAC ZE DEKLAROWAC MOZNA TYLKO 24 GODZ PRZED
-        ///SPRAWDZIC CZY STUDENT NALEZY DO GRUPY ZAJECIOWEJ Z KTOREJ JEST TO ZADANIE
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not declare exercises frm past lessons");
+        }else if (!exercise.get().getLesson().getCourse().isStudenAMemebr(email)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tou are not a member of this course");
+        }else if (exercise.get().getLesson().getHoursToLesson() < 12){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can no longer declare exercises");
+        }
 
         declaration.setExercise(exercise.get());
         declaration.setDeclarationDate(LocalDateTime.now());

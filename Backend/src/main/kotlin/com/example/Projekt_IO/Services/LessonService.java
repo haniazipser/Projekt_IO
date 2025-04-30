@@ -35,7 +35,7 @@ public class LessonService {
         lesson.setCourse(course);
         lesson.setClassDate(course.findNextLessonDate());
         lesson = lessonRepository.save(lesson);
-        List<Exercise> exercises = new ArrayList<>();
+        Set<Exercise> exercises = new HashSet<>();
         for (int i = 1; i <= numberOfExercises; i++){
             Exercise exercise = new Exercise();
             exercise.setExerciseNumber(i);
@@ -58,7 +58,6 @@ public class LessonService {
         exercise.setSubpoint(exerciseDto.getSubpoint());
         exercise.setLesson(classSession.get());
         exerciseRepository.save(exercise);
-
     }
 
     public LessonDto getNextLesson(UUID courseId){
