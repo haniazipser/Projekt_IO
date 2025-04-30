@@ -1,7 +1,6 @@
 package com.example.Projekt_IO.Services;
 
 import com.example.Projekt_IO.Model.Dtos.CourseDto;
-import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.NewCourseDto;
 import com.example.Projekt_IO.Model.Dtos.UserDto;
 import com.example.Projekt_IO.Model.Entities.*;
@@ -10,7 +9,6 @@ import com.example.Projekt_IO.Repositories.CourseRepository;
 
 import com.example.Projekt_IO.Repositories.LessonRepository;
 import com.example.Projekt_IO.Repositories.ParticipantRepository;
-import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,23 +39,24 @@ public class CourseService {
         course.setLessonTimes(courseDto.getLessonTimes());
         course.setName(courseDto.getName());
         course.setInstructor(courseDto.getInstructor());
+        course.setStartDate(courseDto.getStartDate());
+        course.setEndDate(courseDto.getEndDate());
 
         course = courseRepository.save(course);
 
-        Set<Lesson> lessons = new TreeSet<>(Comparator.comparing(Lesson::getClassDate));
+        Set<Lesson> lessons = new HashSet<>();
 
-        LocalDate endDate = courseDto.getEndDate();
-        LocalDateTime end = endDate.atStartOfDay();
+        Instant endDate = courseDto.getEndDate();
         for (LessonTime lessonTime : course.getLessonTimes()) {
-            LocalDateTime next = course.calculateNextOccurrence(lessonTime);
+            Instant next = course.getFirstLesson(lessonTime);
             System.out.println("Dodaję lekcję: " + next);
-            while (next.isBefore(end)){
+            while (next.isBefore(endDate)){
                 Lesson lesson = new Lesson();
                 lesson.setClassDate(next);
                 lesson.setCourse(course);
                 lessonRepository.save(lesson);
                 lessons.add(lesson);
-                next  = next.plusDays(7);
+                next  = next.plus(7, ChronoUnit.DAYS);
             }
         }
         course.setLessons(lessons);
@@ -79,7 +76,7 @@ public class CourseService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
         }else if (!course.get().getCreator().toLowerCase().equals( loggedUser.getEmail().toLowerCase())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to add students to this group");
-        }else if (course.get().isStudenAMemebr(email)){
+        }else if (course.get().isStudentAMemeber(email)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This student is already a member");
         }
 
@@ -98,7 +95,7 @@ public class CourseService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
         }else if (!course.get().getCreator().toLowerCase().equals(  loggedUser.getEmail().toLowerCase().toLowerCase())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to delete students to this group");
-        }else if (!course.get().isStudenAMemebr(email)){
+        }else if (!course.get().isStudentAMemeber(email)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This student is not a member");
         }
 
@@ -112,7 +109,7 @@ public class CourseService {
 
         if (course.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }else if (!course.get().isStudenAMemebr(loggedUser.getEmail())){
+        }else if (!course.get().isStudentAMemeber(loggedUser.getEmail())){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not a member of this group");
         }
 

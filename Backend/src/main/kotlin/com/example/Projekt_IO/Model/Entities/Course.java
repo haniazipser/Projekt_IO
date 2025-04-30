@@ -6,10 +6,8 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,14 +24,14 @@ public class Course {
     private Set<LessonTime> lessonTimes;
 
     @OneToMany(mappedBy = "course")
-    @OrderBy("classDate ASC")
     private Set<Lesson> lessons;
 
     //private Set<String> students;
     @OneToMany(mappedBy = "course")
     private Set<Participant> students;
+    private Instant startDate;
 
-    private LocalDate endDate;
+    private Instant endDate;
 
     @PrePersist
     public void generateId() {
@@ -45,34 +43,35 @@ public class Course {
 
     public Course(){}
 
-    public LocalDateTime calculateNextOccurrence(LessonTime lessonTime) {
-        LocalDateTime now = LocalDateTime.now();
-        DayOfWeek targetDay = lessonTime.getDayOfWeek();
-        LocalTime targetTime = lessonTime.getTime();
+    public Instant getFirstLesson(LessonTime lessonTime) {
 
-        DayOfWeek currentDay = now.getDayOfWeek();
-        LocalDate currentDate = now.toLocalDate();
+        ZoneId zone = ZoneId.systemDefault();
 
-        int daysDifference = targetDay.getValue() - currentDay.getValue();
+        LocalDate date = startDate.atZone(zone).toLocalDate();
 
-        if (daysDifference < 0 || (daysDifference == 0 && now.toLocalTime().isAfter(targetTime))) {
-            daysDifference += 7;
-        }
+        LocalDate nextLessonDate = date.with(TemporalAdjusters.next(lessonTime.getDayOfWeek()));
 
-        LocalDate nextDate = currentDate.plusDays(daysDifference);
-        return LocalDateTime.of(nextDate, targetTime);
+        Instant nextLessonInstant = nextLessonDate.atStartOfDay(zone).toInstant();
+
+
+        return nextLessonInstant;
     }
 
-    public LocalDateTime findNextLessonDate() {
+    public Instant calculateNextOccurrence(LessonTime lessonTime) {
+        return Instant.now().with(TemporalAdjusters.next(lessonTime.getDayOfWeek()));
+    }
+
+
+    public Instant findNextLessonDate() {
         return lessonTimes.stream()//dla kazdego dnia nastepne wystapienie
                 .map(classTime -> calculateNextOccurrence(classTime))
-                .min(LocalDateTime::compareTo)
+                .min(Instant::compareTo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT,
-                        "Calendar for this sourse is empty"
+                        "Calendar for this course is empty"
                 ));
     }
 
-    public boolean isStudenAMemebr(String email){
+    public boolean isStudentAMemeber(String email){
         boolean found = false;
         for (Participant student : students){
             if (student.getEmail().toLowerCase().equals(email)){

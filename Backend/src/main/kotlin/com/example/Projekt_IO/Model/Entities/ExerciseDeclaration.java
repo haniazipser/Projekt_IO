@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class ExerciseDeclaration {
     @Id
     private UUID id;
-    private LocalDateTime declarationDate;
+    private Instant declarationDate;
 
     @Enumerated(EnumType.STRING)
     private DeclarationStatus declarationStatus;

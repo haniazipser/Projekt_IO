@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class Lesson {
     @Id
 
     private UUID id;
-    private LocalDateTime classDate;
+    private Instant classDate;
     @ManyToOne
     private Course course;
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -34,9 +35,9 @@ public class Lesson {
     public Lesson(){}
 
     public LessonStatus getLessonStatus() {
-        if (classDate.isBefore(LocalDateTime.now())){
+        if (classDate.isBefore(Instant.now())){
             return LessonStatus.PAST;
-        } if ( Duration.between(LocalDateTime.now(), classDate).toDays() <= 7){
+        } if ( Duration.between(Instant.now(), classDate).toDays() <= 7){
             return LessonStatus.NEAR;
         } else {
             return LessonStatus.FUTURE;
@@ -44,6 +45,6 @@ public class Lesson {
     }
 
     public long getHoursToLesson(){
-        return Duration.between(LocalDateTime.now(), classDate).toHours();
+        return Duration.between(Instant.now(), classDate).toHours();
     }
 }

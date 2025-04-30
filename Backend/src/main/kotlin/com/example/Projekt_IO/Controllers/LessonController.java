@@ -44,10 +44,8 @@ public class LessonController {
         return lessonService.getLessonsForCourse(courseId, email);
     }
 
-   /* @PutMapping("/{lessonId}/exercises")
-    public updateExercisesForLesson{
-
-    }
-
-    */
+   /*@PutMapping("/exercises")
+    public void updateExercisesForLesson(@RequestBody LessonDto lesson){
+        lessonService.updateExercisesForLesson(lesson);
+    }*/
 }

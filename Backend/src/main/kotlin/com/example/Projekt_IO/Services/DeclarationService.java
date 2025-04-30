@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -27,16 +27,16 @@ public class DeclarationService {
         Optional<Exercise> exercise = exerciseRepository.findById(exerciseId);
         if (exercise.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found");
-        }else if(exercise.get().getLesson().getClassDate().isBefore(LocalDateTime.now())){
+        }else if(exercise.get().getLesson().getClassDate().isBefore(Instant.now())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not declare exercises frm past lessons");
-        }else if (!exercise.get().getLesson().getCourse().isStudenAMemebr(email)){
+        }else if (!exercise.get().getLesson().getCourse().isStudentAMemeber(email)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tou are not a member of this course");
         }else if (exercise.get().getLesson().getHoursToLesson() < 12){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can no longer declare exercises");
         }
 
         declaration.setExercise(exercise.get());
-        declaration.setDeclarationDate(LocalDateTime.now());
+        declaration.setDeclarationDate(Instant.now());
         declaration.setStudent(email);
         declaration.setDeclarationStatus(DeclarationStatus.WAITING);
         declarationRepository.save(declaration);

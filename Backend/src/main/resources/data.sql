@@ -3,10 +3,10 @@ VALUES
 ('3ed7747e-490f-45f6-a1fb-86c9764e75f2','Computer Science', 'polanski@gmail.com', 'janesmith@gmail.com'),
 ('e5965121-1fae-428c-a13f-4e6c741db180','Discrete Mathematics', 'zygadlo@gmail.com', 'johndoe@gmail.com');
 
-INSERT INTO course_lesson_times (course_id, day_of_week, time)
+INSERT INTO course_lesson_times (course_id, day_of_week)
 VALUES
-('3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'MONDAY', '10:00:00'),
-('e5965121-1fae-428c-a13f-4e6c741db180', 'WEDNESDAY', '12:00:00');
+('3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'MONDAY'),
+('e5965121-1fae-428c-a13f-4e6c741db180', 'WEDNESDAY');
 
 INSERT INTO lesson (id,class_date, course_id)
 VALUES
