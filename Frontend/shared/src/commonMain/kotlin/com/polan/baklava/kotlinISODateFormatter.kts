@@ -1,13 +1,9 @@
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.*
 
 fun isoStringToKotlinDateTime(isoString: String): LocalDateTime {
-    return LocalDateTime.parse(isoString, DateTimeFormatter.ISO_DATE_TIME)
+    return LocalDateTime.parse(isoString)
 }
 
-fun isoStringToSwiftDate(_ isoString: String) -> Date? {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    return formatter.date(from: isoString)
+fun kotlinDateTimeToIsoString(dateTime: LocalDateTime): String {
+    return dateTime.toString()
 }
-
