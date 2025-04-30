@@ -10,7 +10,7 @@ func swiftDateToIsoString(_ date: Date) -> String {
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [.withInternetDateTime]
     var isoString = formatter.string(from: date)
-    if isoString.hasSuffix(":00Z") {
+    if isoString.hasSuffix("Z") {
         isoString.removeLast(4) // Remove ":00Z"
     }
     return isoString
