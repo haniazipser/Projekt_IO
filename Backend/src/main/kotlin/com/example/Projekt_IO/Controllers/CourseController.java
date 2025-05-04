@@ -55,4 +55,5 @@ public class CourseController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         courseService.acceptInvite(email, courseId);
     }
+
 }

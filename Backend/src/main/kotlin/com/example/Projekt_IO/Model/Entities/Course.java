@@ -32,6 +32,7 @@ public class Course {
     private Instant startDate;
 
     private Instant endDate;
+    private Integer frequency;
 
     @PrePersist
     public void generateId() {
@@ -52,7 +53,6 @@ public class Course {
         LocalDate nextLessonDate = date.with(TemporalAdjusters.next(lessonTime.getDayOfWeek()));
 
         Instant nextLessonInstant = nextLessonDate.atStartOfDay(zone).toInstant();
-
 
         return nextLessonInstant;
     }
