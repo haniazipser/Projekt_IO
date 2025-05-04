@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.*;
@@ -42,6 +43,7 @@ public class CourseService {
         course.setStartDate(courseDto.getStartDate());
         course.setEndDate(courseDto.getEndDate());
         course.setFrequency(courseDto.getFrequency());
+        course.setIsArchived(false);
 
         course = courseRepository.save(course);
 
@@ -118,7 +120,7 @@ public class CourseService {
     }
 
     public CourseDto getGroupInfo(UUID groupId){
-        Course course = courseRepository.findById(groupId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+        Course course = courseRepository.findById(groupId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
         return new CourseDto(course);
     }
 
@@ -127,6 +129,13 @@ public class CourseService {
         participant.setInvitationStatus(InvitationStatus.ACCEPTED);
         participantRepository.save(participant);
     }
-
-
+    public void archiveCourse(UUID courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
+        UserDto loggedUser = userInfoService.getLoggedUserInfo();
+        if (!course.getCreator().toLowerCase().equals(loggedUser.getEmail().toLowerCase())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to archive this course");
+        }
+        course.setIsArchived(true);
+        courseRepository.save(course);
+    }
 }

@@ -56,4 +56,9 @@ public class CourseController {
         courseService.acceptInvite(email, courseId);
     }
 
+    @DeleteMapping("/{courseId}")
+    public void deleteCourse(@PathVariable UUID courseId){
+        courseService.archiveCourse(courseId);
+    }
+
 }

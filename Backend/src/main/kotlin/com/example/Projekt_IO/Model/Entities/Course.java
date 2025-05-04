@@ -23,7 +23,7 @@ public class Course {
     @ElementCollection
     private Set<LessonTime> lessonTimes;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Lesson> lessons;
 
     //private Set<String> students;
@@ -33,6 +33,7 @@ public class Course {
 
     private Instant endDate;
     private Integer frequency;
+    private Boolean isArchived;
 
     @PrePersist
     public void generateId() {
