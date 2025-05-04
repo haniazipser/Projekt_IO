@@ -41,6 +41,7 @@ public class CourseService {
         course.setInstructor(courseDto.getInstructor());
         course.setStartDate(courseDto.getStartDate());
         course.setEndDate(courseDto.getEndDate());
+        course.setFrequency(courseDto.getFrequency());
 
         course = courseRepository.save(course);
 
@@ -56,7 +57,7 @@ public class CourseService {
                 lesson.setCourse(course);
                 lessonRepository.save(lesson);
                 lessons.add(lesson);
-                next  = next.plus(7, ChronoUnit.DAYS);
+                next  = next.plus(7 * course.getFrequency(), ChronoUnit.DAYS);
             }
         }
         course.setLessons(lessons);

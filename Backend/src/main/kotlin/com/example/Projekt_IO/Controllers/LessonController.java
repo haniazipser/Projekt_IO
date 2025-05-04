@@ -8,6 +8,7 @@ import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -38,5 +39,10 @@ public class LessonController {
    @PutMapping("/exercises")
     public void updateExercisesForLesson(@RequestBody LessonDto lesson){
         lessonService.updateExercisesForLesson(lesson);
+    }
+
+    @PutMapping("{courseId}/{date}/addLesson")
+    public LessonDto addLesson(@PathVariable UUID courseId, @PathVariable Instant date){
+        return lessonService.addNewLesson(courseId,date);
     }
 }

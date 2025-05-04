@@ -21,5 +21,6 @@ public class NewCourseDto {
     private Set<String> students;
     private Instant endDate;
     private Instant startDate;
+    private Integer frequency;
     public NewCourseDto(){}
 }

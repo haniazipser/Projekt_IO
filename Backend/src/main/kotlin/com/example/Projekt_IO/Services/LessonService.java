@@ -28,7 +28,7 @@ public class LessonService {
     private final ExerciseRepository exerciseRepository;
     private final CourseRepository courseRepository;
 
-    public LessonDto createNewLesson(UUID courseId, Integer numberOfExercises){
+    public LessonDto addNewLesson(UUID courseId, Instant date){
         Optional<Course> c = courseRepository.findById(courseId);
         if (c.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found");
@@ -36,18 +36,8 @@ public class LessonService {
         Lesson lesson = new Lesson();
         Course course = c.get();
         lesson.setCourse(course);
-        lesson.setClassDate(course.findNextLessonDate());
+        lesson.setClassDate(date);
         lesson = lessonRepository.save(lesson);
-        Set<Exercise> exercises = new HashSet<>();
-        for (int i = 1; i <= numberOfExercises; i++){
-            Exercise exercise = new Exercise();
-            exercise.setExerciseNumber(i);
-            exercise.setLesson(lesson);
-            exercises.add(exercise);
-            exerciseRepository.save(exercise);
-        }
-        lesson.setLessonExercises(exercises);
-
         return new LessonDto(lesson);
     }
 
