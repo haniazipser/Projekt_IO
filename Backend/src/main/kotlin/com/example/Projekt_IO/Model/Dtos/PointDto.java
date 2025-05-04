@@ -18,4 +18,5 @@ public class PointDto {
             this.lesson = new LessonDto(point.getLesson());
             this.activityValue = point.getActivityValue();
         }
+        public PointDto(){}
 }
