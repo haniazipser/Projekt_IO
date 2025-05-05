@@ -28,11 +28,6 @@ public class PointController {
         return pointService.getUsersActivityInCourse(email,courseId);
     }
 
-    @GetMapping("/{courseId}/howMany")
-    public int getNumberOfPointsInCourse(@PathVariable UUID courseId){
-        return getUsersActivityInCourse(courseId).size();
-    }
-
 
     @PostMapping("")//wysylasz mi z formularza obiekt z polami jak ma activity dto
     public void addStudentActivity( @RequestBody PointDto activity){

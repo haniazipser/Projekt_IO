@@ -40,25 +40,19 @@ public class CourseController {
         return courseService.getStudentsInGroup(courseId);
     }
 
-    /*@PostMapping("/{email}/{courseId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
-    public void addStudentToGroup(@PathVariable String email, @PathVariable UUID courseId){
+    @PostMapping("/{email}/{courseId}")
+    public void addStudentToCourse(@PathVariable String email, @PathVariable UUID courseId){
         courseApplicationService.addStudentToGroup(email, courseId);
-    }*/
+    }
 
-    @PostMapping("/{groupCode}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
-    public void addStudentToGroup(@PathVariable String groupCode){
-        courseApplicationService.addStudentToGroup(groupCode);
+    @PostMapping("/{groupCode}")
+    public void joinCourse(@PathVariable String groupCode){
+        courseService.joinCourse(groupCode);
     }
 
     @DeleteMapping("/{email}/{courseId}")
     public void deleteStudentFromGroup(@PathVariable String email, @PathVariable UUID courseId){
         courseService.deleteStudentFromGroup(email,courseId);
-    }
-
-    @PostMapping("/accept/{courseId}")
-    public void acceptInvitation(@PathVariable UUID courseId) {
-        String email = userInfoService.getLoggedUserInfo().getEmail();
-        courseService.acceptInvite(email, courseId);
     }
 
     @DeleteMapping("/{courseId}")

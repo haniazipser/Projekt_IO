@@ -1,4 +1,4 @@
-INSERT INTO course (id, name, instructor, creator, frequency)
+INSERT INTO course (id, name, instructor, creator, frequency, course_code)
 VALUES
 ('3ed7747e-490f-45f6-a1fb-86c9764e75f2','Computer Science', 'polanski@gmail.com', 'janesmith@gmail.com',1, '110fb02f-4514-40d3-8398-9d1d517b0ebc'),
 ('e5965121-1fae-428c-a13f-4e6c741db180','Discrete Mathematics', 'zygadlo@gmail.com', 'johndoe@gmail.com',1, '83e6e33f-7be8-434e-ad58-09820d0a78ba');
@@ -16,7 +16,7 @@ VALUES
 INSERT INTO exercise (id,lesson_id, exercise_number, subpoint, approved_student)
 VALUES
 ('f3b08d44-76d6-41bf-936e-392c90a63307','b0e58980-811a-4832-89c8-ccf4a60bf4be', 1, 'a', 'johndoe@gmail.com'),
-('5cbf7d41-744a-46c1-84e3-988e37693436','b0e58980-811a-4832-89c8-ccf4a60bf4be', 2, NULL, NULL),
+('5cbf7d41-744a-46c1-84e3-988e37693436','b0e58980-811a-4832-89c8-ccf4a60bf4be', 2, NULL, 'janeSmith@gmail.com'),
 ('bacba752-8fef-4b0d-8c9e-2325e4933e0b','5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 1, NULL, 'AliceBrown@gmail.com');
 
 INSERT INTO exercise_declaration (id, declaration_date, declaration_status, exercise_id, student)

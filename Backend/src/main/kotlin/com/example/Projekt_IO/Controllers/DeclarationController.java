@@ -1,8 +1,7 @@
 package com.example.Projekt_IO.Controllers;
 
 import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
-import com.example.Projekt_IO.Services.DeclarationService;
-import com.example.Projekt_IO.Services.UserInfoService;
+import com.example.Projekt_IO.Services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +14,7 @@ import java.util.UUID;
 public class DeclarationController {
     private final DeclarationService declarationService;
     private final UserInfoService userInfoService;
+    private final ExerciseApplicationService exerciseApplicationService;
     @PostMapping("/{exerciseId}")
     public void declareExercise ( @PathVariable UUID exerciseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
@@ -47,5 +47,10 @@ public class DeclarationController {
     @DeleteMapping("/{declarationId}")
     public void deleteDeclaration (@PathVariable UUID declarationId){
         declarationService.deleteDeclaration (declarationId);
+    }
+
+    @PostMapping("/{lessonId}/send")
+    public void sendList(@PathVariable UUID lessonId){
+        exerciseApplicationService.exportListToPdf(lessonId);
     }
 }
