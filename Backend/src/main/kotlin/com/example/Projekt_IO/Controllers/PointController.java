@@ -40,4 +40,6 @@ public class PointController {
         pointService.addStudentActivity(email,activity);
     }
 
+
+
 }

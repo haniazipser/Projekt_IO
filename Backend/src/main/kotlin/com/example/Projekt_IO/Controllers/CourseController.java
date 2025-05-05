@@ -40,9 +40,14 @@ public class CourseController {
         return courseService.getStudentsInGroup(courseId);
     }
 
-    @PostMapping("/{email}/{courseId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
+    /*@PostMapping("/{email}/{courseId}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
     public void addStudentToGroup(@PathVariable String email, @PathVariable UUID courseId){
         courseApplicationService.addStudentToGroup(email, courseId);
+    }*/
+
+    @PostMapping("/{groupCode}")//  EWENTUALNIE MOGE CI DODAC LISTE USEROW
+    public void addStudentToGroup(@PathVariable String groupCode){
+        courseApplicationService.addStudentToGroup(groupCode);
     }
 
     @DeleteMapping("/{email}/{courseId}")
@@ -50,8 +55,8 @@ public class CourseController {
         courseService.deleteStudentFromGroup(email,courseId);
     }
 
-    @PostMapping("/accept")
-    public void acceptInvitation(@RequestParam UUID courseId) {
+    @PostMapping("/accept/{courseId}")
+    public void acceptInvitation(@PathVariable UUID courseId) {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         courseService.acceptInvite(email, courseId);
     }
