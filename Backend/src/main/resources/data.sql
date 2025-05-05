@@ -1,7 +1,7 @@
 INSERT INTO course (id, name, instructor, creator, frequency)
 VALUES
-('3ed7747e-490f-45f6-a1fb-86c9764e75f2','Computer Science', 'polanski@gmail.com', 'janesmith@gmail.com',1),
-('e5965121-1fae-428c-a13f-4e6c741db180','Discrete Mathematics', 'zygadlo@gmail.com', 'johndoe@gmail.com',1);
+('3ed7747e-490f-45f6-a1fb-86c9764e75f2','Computer Science', 'polanski@gmail.com', 'janesmith@gmail.com',1, '110fb02f-4514-40d3-8398-9d1d517b0ebc'),
+('e5965121-1fae-428c-a13f-4e6c741db180','Discrete Mathematics', 'zygadlo@gmail.com', 'johndoe@gmail.com',1, '83e6e33f-7be8-434e-ad58-09820d0a78ba');
 
 INSERT INTO course_lesson_times (course_id, day_of_week)
 VALUES
