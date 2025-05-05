@@ -4,10 +4,13 @@ import com.example.Projekt_IO.Model.Dtos.CourseDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
 import com.example.Projekt_IO.Model.Dtos.TaskDto;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,14 +26,20 @@ public class CourseApplicationService {
     private final DeclarationService declarationService;
     private final ExerciseService exerciseService;
 
-    public void addStudentToGroup(String email, UUID groupId) {
-        String link = "http://localhost:8080/group/accept?groupId=" + groupId;
+    public void addStudentToGroup(String groupCode) {
+        groupClassService.addStudentToGroup(groupCode);
+
+       /* String link = "tutti://group/" + groupId;
         groupClassService.addStudentToGroup(email, groupId);
         CourseDto group = groupClassService.getGroupInfo(groupId);
         StringBuilder builder = new StringBuilder();
         builder.append("You have been added to ").append(group.getName()).append(" group");
-        builder.append('\n').append(link);
-        emailService.sendMessage(email,"New group Alert", builder.toString());
+        builder.append('\n').append("<a href=\\").append(link).append("\\>");
+        try {
+            emailService.sendMessage(email, "New group Alert", builder.toString());
+        }catch (MessagingException e){
+            System.out.println("e");
+        }*/
     }
 
     public Set<TaskDto> getStudentsTasks(String email){

@@ -35,6 +35,8 @@ public class Course {
     private Integer frequency;
     private Boolean isArchived;
 
+    private String courseCode;
+
     @PrePersist
     public void generateId() {
         if (id == null) {

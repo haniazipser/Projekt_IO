@@ -44,6 +44,7 @@ public class CourseService {
         course.setEndDate(courseDto.getEndDate());
         course.setFrequency(courseDto.getFrequency());
         course.setIsArchived(false);
+        course.setCourseCode(UUID.randomUUID().toString());
 
         course = courseRepository.save(course);
 
@@ -67,25 +68,21 @@ public class CourseService {
         Participant participant = new Participant();
         participant.setCourse(course);
         participant.setEmail(email);
+        participant.setInvitationStatus(InvitationStatus.WAITING);
         participantRepository.save(participant);
         return new CourseDto(course);
     }
 
-    public void addStudentToGroup(String email, UUID groupId) {
-        Optional<Course> course = courseRepository.findById(groupId);
+    public void addStudentToGroup(String courseCode) {
+        Optional<Course> course = courseRepository.findByCourseCode(courseCode);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
         if (course.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
-        }else if (!course.get().getCreator().toLowerCase().equals( loggedUser.getEmail().toLowerCase())){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to add students to this group");
-        }else if (course.get().isStudentAMemeber(email)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"This student is already a member");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found");
         }
 
         Participant participant = new Participant();
-        participant.setInvitationStatus(InvitationStatus.WAITING);
-        participant.setEmail(email);
+        participant.setEmail(loggedUser.getEmail());
         participant.setCourse(course.get());
 
         participantRepository.save(participant);
