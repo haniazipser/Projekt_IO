@@ -31,7 +31,7 @@ public class CourseService {
     private final UserInfoService userInfoService;
     Logger logger = LoggerFactory.getLogger(CourseService.class);
     public Set<CourseDto> getUsersGroups (String email){
-      return courseRepository.findDistinctByStudents_Email(email).stream().map(g -> new CourseDto(g)).collect(Collectors.toSet());
+      return courseRepository.findDistinctByStudents_EmailAndStudents_InvitationStatus(email, InvitationStatus.ACCEPTED).stream().map(g -> new CourseDto(g)).collect(Collectors.toSet());
     }
 
     public CourseDto createCourse(String email, NewCourseDto courseDto) {
@@ -68,15 +68,22 @@ public class CourseService {
         Participant participant = new Participant();
         participant.setCourse(course);
         participant.setEmail(email);
-        participant.setInvitationStatus(InvitationStatus.WAITING);
+        participant.setInvitationStatus(InvitationStatus.ACCEPTED);
         participantRepository.save(participant);
         return new CourseDto(course);
     }
 
     public void addStudentToGroup(String email, UUID courseId) {
         Optional<Course> course = courseRepository.findById(courseId);
-               if (course.isEmpty()){
+        UserDto loggedUser = userInfoService.getLoggedUserInfo();
+        if (course.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found");
+        }else if (!course.get().getCreator().toLowerCase().equals(  loggedUser.getEmail().toLowerCase().toLowerCase())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not authorized to add students to this group");
+        }
+
+        if (!participantRepository.findByEmailAndCourse(email,course.get()).isEmpty()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"This user is already in this course");
         }
 
         Participant participant = new Participant();
@@ -114,7 +121,7 @@ public class CourseService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not a member of this group");
         }
 
-        return course.get().getStudents().stream().map(s -> s.getEmail()).collect(Collectors.toSet());
+        return participantRepository.findByCourse(course.get()).stream().map(s -> s.getEmail()).collect(Collectors.toSet());
     }
 
     public CourseDto getGroupInfo(UUID groupId){
@@ -142,12 +149,9 @@ public class CourseService {
         Participant participant;
         Optional<Participant> p = participantRepository.findByEmailAndCourse(loggedUser.getEmail(),course.get());
         if (p.isEmpty()){
-           participant = new Participant();
-           participant.setCourse(course.get());
-           participant.setEmail(loggedUser.getEmail());
-        }else{
-            participant = p.get();
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You were not invited to this course");
         }
+        participant = p.get();
         participant.setInvitationStatus(InvitationStatus.ACCEPTED);
         participantRepository.save(participant);
 
