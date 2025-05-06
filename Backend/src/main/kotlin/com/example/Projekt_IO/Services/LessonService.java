@@ -92,6 +92,10 @@ public class LessonService {
             exerciseRepository.save(exercise);
         }
     }
+
+    public LessonDto getLessonInfo(UUID lessonId){
+        return new LessonDto(lessonRepository.findById(lessonId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found")));
+    }
 /*
     public void updateExercisesForLesson(LessonDto lessonDto) {
         Optional<Lesson> l = lessonRepository.findById(lessonDto.getId());

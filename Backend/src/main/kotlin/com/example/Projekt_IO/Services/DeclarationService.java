@@ -79,4 +79,5 @@ public class DeclarationService {
         }
         declarationRepository.delete(declaration.get());
     }
+
 }
