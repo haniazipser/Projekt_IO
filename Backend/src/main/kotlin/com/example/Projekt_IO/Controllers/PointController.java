@@ -29,10 +29,10 @@ public class PointController {
     }
 
 
-    @PostMapping("")//wysylasz mi z formularza obiekt z polami jak ma activity dto
-    public void addStudentActivity( @RequestBody PointDto activity){
+    @PostMapping("/{lessonId}/{value}")//wysylasz mi z formularza obiekt z polami jak ma activity dto
+    public void addStudentActivity( @PathVariable UUID lessonId, @PathVariable Double value){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        pointService.addStudentActivity(email,activity);
+        pointService.addStudentActivity(email,lessonId,value);
     }
 
 
