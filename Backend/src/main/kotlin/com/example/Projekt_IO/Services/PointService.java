@@ -30,21 +30,23 @@ public class PointService {
                 .map(a -> new PointDto(a)).collect(Collectors.toList());
     }
 
-    public void addStudentActivity(String email, PointDto activity) {
-        Optional<Point> p = pointRepository.findById(activity.getId());
+    public void addStudentActivity(String email, UUID lessonId, Double value) {
+        Optional<Point> p = pointRepository.findByLesson_IdAndStudent(lessonId,email);
         if(p.isEmpty()) {
+            System.out.println("towrze nowy");
             Point newPoint = new Point();
-            newPoint.setActivityValue(activity.getActivityValue());
+            newPoint.setActivityValue(value);
             newPoint.setStudent(email);
-            Optional<Lesson> lesson = lessonRepository.findById(activity.getLesson().getId());
+            Optional<Lesson> lesson = lessonRepository.findById(lessonId);
             if (lesson.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
             }
             newPoint.setLesson(lesson.get());
             pointRepository.save(newPoint);
         }else{
+            System.out.println("modyfikuje poprzedni o wartości" + value);
             Point point = p.get();
-            point.setActivityValue(activity.getActivityValue());
+            point.setActivityValue(value);
             pointRepository.save(point);
         }
 
