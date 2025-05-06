@@ -8,6 +8,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,30 @@ public class EmailService {
 
         String htmlContent = buildHtmlContent(subject, bodyContent);
         helper.setText(htmlContent, true); // 'true' indicates HTML
+
+        mailSender.send(message);
+    }
+
+    public void sendMessageWithList(String to) throws MessagingException, FileNotFoundException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        String subject = "List";
+        String bodyContent = "List of exercises";
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setFrom("noreply@example.com");
+
+        String htmlContent = buildHtmlContent(subject, bodyContent);
+        helper.setText(htmlContent, true);
+
+        File pdfFile = new File("List.pdf");
+        if (pdfFile.exists()) {
+            helper.addAttachment("List.pdf", pdfFile);
+        } else {
+            throw new FileNotFoundException("Attachment file not found: " + pdfFile.getAbsolutePath());
+        }
 
         mailSender.send(message);
     }

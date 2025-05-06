@@ -1,5 +1,6 @@
 package com.example.Projekt_IO.Services;
 
+import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
 import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
 import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
@@ -57,6 +58,10 @@ public class ExerciseService {
             exerciseRepository.save(newExercise);
         }
 
+    }
+
+    public Set<ExerciseDto> getList(UUID lessonId) {
+        return exerciseRepository.findByLesson_Id(lessonId).stream().map(d -> new ExerciseDto(d)).collect(Collectors.toSet());
     }
 
 }

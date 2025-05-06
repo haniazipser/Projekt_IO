@@ -31,14 +31,22 @@ public class PointService {
     }
 
     public void addStudentActivity(String email, PointDto activity) {
-        Point newPoint = new Point();
-        newPoint.setActivityValue(activity.getActivityValue());
-        newPoint.setStudent(email);
-        Optional<Lesson> lesson = lessonRepository.findById(activity.getLesson().getId());
-        if (lesson.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
+        Optional<Point> p = pointRepository.findById(activity.getId());
+        if(p.isEmpty()) {
+            Point newPoint = new Point();
+            newPoint.setActivityValue(activity.getActivityValue());
+            newPoint.setStudent(email);
+            Optional<Lesson> lesson = lessonRepository.findById(activity.getLesson().getId());
+            if (lesson.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found");
+            }
+            newPoint.setLesson(lesson.get());
+            pointRepository.save(newPoint);
+        }else{
+            Point point = p.get();
+            point.setActivityValue(activity.getActivityValue());
+            pointRepository.save(point);
         }
-        newPoint.setLesson(lesson.get());
-        pointRepository.save(newPoint);
+
     }
 }
