@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Set;
 
 @Service
@@ -22,11 +24,12 @@ public class FileService {
         PdfWriter.getInstance(document, new FileOutputStream("List.pdf"));
 
         document.open();
-        Font titleFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 18, BaseColor.BLACK);
-        Paragraph title = new Paragraph("List for " + lesson.getCourseName() + " "+ lesson.getClassDate().toString(), titleFont);
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+        LocalDate date = LocalDate.from(lesson.getClassDate().atZone(ZoneId.systemDefault()));
+        Paragraph title = new Paragraph("List for " + lesson.getCourseName() + " "+ date.toString(), titleFont);
         title.setSpacingAfter(20);
         document.add(title);
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+        Font font = FontFactory.getFont(FontFactory.HELVETICA, 16, BaseColor.BLACK);
         for (ExerciseDto e : exercises) {
             StringBuilder line = new StringBuilder();
 

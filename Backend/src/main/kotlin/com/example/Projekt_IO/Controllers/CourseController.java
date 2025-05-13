@@ -56,7 +56,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{courseId}")
-    public void deleteCourse(@PathVariable UUID courseId){
+    public void archiveCourse(@PathVariable UUID courseId){
         courseService.archiveCourse(courseId);
     }
 

@@ -23,7 +23,6 @@ public class CourseDto {
     private Instant startDate;
     private Instant endDate;
     private Integer frequency;
-    private Boolean isArchived;
     private String courseCode;
     public CourseDto(Course course){
         this.id = course.getId();
@@ -37,7 +36,6 @@ public class CourseDto {
         this.endDate = course.getEndDate();
         this.startDate = course.getStartDate();
         this.frequency = course.getFrequency();
-        this.isArchived = course.getIsArchived();
         this.courseCode = course.getCourseCode();
     }
 
