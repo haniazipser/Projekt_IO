@@ -1,7 +1,7 @@
 -- Kurs
-INSERT INTO course (id, name, instructor, creator, start_date, end_date, frequency, is_archived, course_code)
+INSERT INTO course (id, name, instructor, creator, start_date, end_date, frequency, course_code)
 VALUES
-('a1111111-2222-4333-8444-555555555555','Advanced Algorithms', 'dr.brecht@uni.edu', 'admin@uni.edu', '2025-03-01 00:00:00', '2025-07-31 00:00:00', 1, false, '110fb02f-4514-40d3-8398-9d1d517b0ebc');
+('a1111111-2222-4333-8444-555555555555','Advanced Algorithms', 'dr.brecht@uni.edu', 'admin@uni.edu', '2025-03-01 00:00:00', '2025-07-31 00:00:00', 1, '110fb02f-4514-40d3-8398-9d1d517b0ebc');
 
 -- Dni tygodnia
 INSERT INTO course_lesson_times (course_id, day_of_week)
