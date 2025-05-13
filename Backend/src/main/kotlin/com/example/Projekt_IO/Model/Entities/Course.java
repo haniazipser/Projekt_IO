@@ -33,7 +33,6 @@ public class Course {
 
     private Instant endDate;
     private Integer frequency;
-    private Boolean isArchived;
 
     private String courseCode;
 

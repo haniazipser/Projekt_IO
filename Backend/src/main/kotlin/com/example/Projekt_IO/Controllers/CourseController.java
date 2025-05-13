@@ -7,17 +7,19 @@ import com.example.Projekt_IO.Services.CourseApplicationService;
 import com.example.Projekt_IO.Services.CourseService;
 import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/course")
 @RequiredArgsConstructor
 public class CourseController {
-    //komentarz
 
     private final CourseService courseService;
     private final CourseApplicationService courseApplicationService;
@@ -36,8 +38,11 @@ public class CourseController {
     }
 
     @GetMapping("{courseId}/students")
-    public Set<String> getStudentsInGroup(@PathVariable UUID courseId){
-        return courseService.getStudentsInGroup(courseId);
+    public ResponseEntity<Set<String>> getStudentsInGroup(@PathVariable UUID courseId){
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                .body(courseService.getStudentsInGroup(courseId));
     }
 
     @PostMapping("/{email}/{courseId}")
@@ -56,7 +61,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{courseId}")
-    public void deleteCourse(@PathVariable UUID courseId){
+    public void archiveCourse(@PathVariable UUID courseId){
         courseService.archiveCourse(courseId);
     }
 
