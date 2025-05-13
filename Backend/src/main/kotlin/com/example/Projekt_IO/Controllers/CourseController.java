@@ -31,10 +31,13 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public Set<CourseDto> getStudentGroups(){
+    public ResponseEntity<Set<CourseDto>> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         System.out.println(email);
-        return courseService.getUsersGroups(email);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
+                .body(courseService.getUsersGroups(email));
     }
 
     @GetMapping("{courseId}/students")
