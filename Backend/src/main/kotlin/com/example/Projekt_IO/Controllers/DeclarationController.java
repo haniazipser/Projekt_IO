@@ -3,10 +3,14 @@ package com.example.Projekt_IO.Controllers;
 import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
 import com.example.Projekt_IO.Services.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,21 +26,30 @@ public class DeclarationController {
     }
 
     @GetMapping("")
-    public Set<DeclarationDto> getStudentDeclarations (){
+    public ResponseEntity<List<DeclarationDto>> getStudentDeclarations (){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return declarationService.getUsersDeclarations(email);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .body(declarationService.getUsersDeclarations(email));
     }
 
     @GetMapping("/course/{courseId}")
-    public Set<DeclarationDto> getStudentDeclarationsInCourse (@PathVariable UUID courseId){
+    public ResponseEntity<List<DeclarationDto>> getStudentDeclarationsInCourse (@PathVariable UUID courseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return declarationService.getUsersDeclarationsInCourse(email, courseId);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .body(declarationService.getUsersDeclarationsInCourse(email, courseId));
     }
 
     @GetMapping("/lesson/{lessonId}")
-    public Set<DeclarationDto> getStudentDeclarationsForLesson (@PathVariable UUID lessonId){
+    public ResponseEntity<List<DeclarationDto>> getStudentDeclarationsForLesson (@PathVariable UUID lessonId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return declarationService.getDeclarationsForLesson(email, lessonId);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .body(declarationService.getDeclarationsForLesson(email, lessonId));
     }
 
     @PostMapping("/runMatching")

@@ -45,7 +45,7 @@ public class CourseApplicationService {
         }
     }
 
-    public Set<TaskDto> getStudentsTasks(String email){
+   /* public Set<TaskDto> getStudentsTasks(String email){
         Set<CourseDto> groups = groupClassService.getUsersGroups(email);
         Set<TaskDto> tasks = new HashSet<>();
         for (CourseDto g : groups)   {
@@ -61,5 +61,5 @@ public class CourseApplicationService {
             tasks.add(task);
         }
         return tasks;
-    }
+    }*/
 }

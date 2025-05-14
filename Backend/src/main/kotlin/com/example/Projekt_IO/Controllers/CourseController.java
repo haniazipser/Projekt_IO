@@ -31,7 +31,7 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<Set<CourseDto>> getStudentGroups(){
+    public ResponseEntity<List<CourseDto>> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         System.out.println(email);
         return ResponseEntity
@@ -41,10 +41,10 @@ public class CourseController {
     }
 
     @GetMapping("{courseId}/students")
-    public ResponseEntity<Set<String>> getStudentsInGroup(@PathVariable UUID courseId){
+    public ResponseEntity<List<String>> getStudentsInGroup(@PathVariable UUID courseId){
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
                 .body(courseService.getStudentsInGroup(courseId));
     }
 

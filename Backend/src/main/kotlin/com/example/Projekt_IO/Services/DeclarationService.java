@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,8 +44,8 @@ public class DeclarationService {
         declarationRepository.save(declaration);
     }
 
-    public Set<DeclarationDto> getUsersDeclarations(String email) {
-        return declarationRepository.findByStudent(email).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+    public List<DeclarationDto> getUsersDeclarations(String email) {
+        return declarationRepository.findByStudent(email).stream().map(d -> new DeclarationDto(d)).sorted(Comparator.comparing(DeclarationDto::getId)).collect(Collectors.toList());
     }
 
     public void runMatchingAlgorithm(){
@@ -58,16 +60,18 @@ public class DeclarationService {
 
     }
 
-    public Set<DeclarationDto> getDeclarationsForLesson(String email, UUID id) {
-        return declarationRepository.findByStudentAndExercise_Lesson_Id(email,id).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+    public List<DeclarationDto> getDeclarationsForLesson(String email, UUID id) {
+        return declarationRepository.findByStudentAndExercise_Lesson_Id(email,id)
+                .stream().map(d -> new DeclarationDto(d)).sorted(Comparator.comparing(DeclarationDto::getId)).collect(Collectors.toList());
     }
 
     public Integer getDeclarationsForSessionCount(String email, UUID id) {
         return declarationRepository.countByStudentAndExercise_Lesson_Id(email,id);
     }
 
-    public Set<DeclarationDto> getUsersDeclarationsInCourse(String email, UUID courseId) {
-        return declarationRepository.findByStudentAndExercise_Lesson_Course_Id(email,courseId).stream().map(d -> new DeclarationDto(d)).collect(Collectors.toSet());
+    public List<DeclarationDto> getUsersDeclarationsInCourse(String email, UUID courseId) {
+        return declarationRepository.findByStudentAndExercise_Lesson_Course_Id(email,courseId)
+                .stream().map(d -> new DeclarationDto(d)).sorted(Comparator.comparing(DeclarationDto::getId)).collect(Collectors.toList());
     }
 
     public void deleteDeclaration(UUID declarationId) {

@@ -6,12 +6,15 @@ import com.example.Projekt_IO.Services.LessonService;
 import com.example.Projekt_IO.Services.ExerciseService;
 import com.example.Projekt_IO.Services.UserInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +24,11 @@ public class LessonController {
     private final LessonService lessonService;
     private final UserInfoService userInfoService;
     @GetMapping("/{lessonId}/exercises")
-    public List<ExerciseDto> getExercisesForLesson(@PathVariable UUID lessonId){
-        return exerciseService.getExercisesForLesson(lessonId);
+    public ResponseEntity<List<ExerciseDto>> getExercisesForLesson(@PathVariable UUID lessonId){
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).mustRevalidate())
+                .body(exerciseService.getExercisesForLesson(lessonId));
     }
 
     @DeleteMapping("/{lessonId}")
@@ -31,9 +37,12 @@ public class LessonController {
     }
 
     @GetMapping("/{courseId}/lessons")
-    public List<LessonDto> getLessonsForCourse (@PathVariable UUID courseId){
+    public ResponseEntity<List<LessonDto>> getLessonsForCourse (@PathVariable UUID courseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        return lessonService.getLessonsForCourse(courseId, email);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).mustRevalidate())
+                .body(lessonService.getLessonsForCourse(courseId, email));
     }
 
    @PutMapping("/exercises")

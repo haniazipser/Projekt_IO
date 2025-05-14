@@ -21,8 +21,9 @@ public class PointService {
     private final PointRepository pointRepository;
     private final LessonRepository lessonRepository;
 
-    public Set<PointDto> getUsersActivity (String email){
-        return pointRepository.findByStudent(email).stream().map(a -> new PointDto(a)).collect(Collectors.toSet());
+    public List<PointDto> getUsersActivity (String email){
+        return pointRepository.findByStudent(email)
+                .stream().map(a -> new PointDto(a)).sorted(Comparator.comparing(PointDto::getId)).collect(Collectors.toList());
     }
     public List<PointDto> getUsersActivityInCourse(String email, UUID courseId) {
         return pointRepository.findByStudentAndLesson_Course_Id(email, courseId).stream()
