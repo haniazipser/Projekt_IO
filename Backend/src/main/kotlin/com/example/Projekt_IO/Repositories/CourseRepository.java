@@ -15,4 +15,5 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
     Optional<Course> findByCourseCode(String courseCode);
 
     Set<Course> findDistinctByStudents_EmailAndStudents_InvitationStatus(String email, InvitationStatus invitationStatus);
+
 }

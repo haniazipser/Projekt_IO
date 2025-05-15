@@ -31,17 +31,20 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public Set<CourseDto> getStudentGroups(){
+    public ResponseEntity<List<CourseDto>> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         System.out.println(email);
-        return courseService.getUsersGroups(email);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
+                .body(courseService.getUsersGroups(email));
     }
 
     @GetMapping("{courseId}/students")
-    public ResponseEntity<Set<String>> getStudentsInGroup(@PathVariable UUID courseId){
+    public ResponseEntity<List<String>> getStudentsInGroup(@PathVariable UUID courseId){
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
                 .body(courseService.getStudentsInGroup(courseId));
     }
 

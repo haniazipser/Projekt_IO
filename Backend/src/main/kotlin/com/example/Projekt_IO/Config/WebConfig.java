@@ -1,14 +1,15 @@
 package com.example.Projekt_IO.Config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.logging.Filter;
-
-public class WebConfig implements WebMvcConfigurer {
+@Configuration
+public class WebConfig {
     @Bean
-    public ShallowEtagHeaderFilter shallowEtagFilter() {
+    public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
         return new ShallowEtagHeaderFilter();
     }
 }

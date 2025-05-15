@@ -30,8 +30,9 @@ public class CourseService {
     private final LessonRepository lessonRepository;
     private final UserInfoService userInfoService;
     Logger logger = LoggerFactory.getLogger(CourseService.class);
-    public Set<CourseDto> getUsersGroups (String email){
-      return courseRepository.findDistinctByStudents_EmailAndStudents_InvitationStatus(email, InvitationStatus.ACCEPTED).stream().map(g -> new CourseDto(g)).collect(Collectors.toSet());
+    public List<CourseDto> getUsersGroups (String email){
+      return courseRepository.findDistinctByStudents_EmailAndStudents_InvitationStatus(email, InvitationStatus.ACCEPTED)
+              .stream().map(g -> new CourseDto(g)).sorted(Comparator.comparing(CourseDto::getId)).collect(Collectors.toList());
     }
 
     public CourseDto createCourse(String email, NewCourseDto courseDto) {
@@ -110,7 +111,7 @@ public class CourseService {
         participantRepository.delete(participant.get());
     }
 
-    public Set<String> getStudentsInGroup(UUID groupId) {
+    public List<String> getStudentsInGroup(UUID groupId) {
         Optional<Course> course = courseRepository.findById(groupId);
         UserDto loggedUser = userInfoService.getLoggedUserInfo();
 
@@ -120,7 +121,7 @@ public class CourseService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"You are not a member of this group");
         }
 
-        return participantRepository.findByCourseAndInvitationStatus(course.get(), InvitationStatus.ACCEPTED).stream().map(s -> s.getEmail()).collect(Collectors.toSet());
+        return participantRepository.findByCourseAndInvitationStatus(course.get(), InvitationStatus.ACCEPTED).stream().map(s -> s.getEmail()).sorted().collect(Collectors.toList());
     }
 
     public CourseDto getGroupInfo(UUID groupId){
