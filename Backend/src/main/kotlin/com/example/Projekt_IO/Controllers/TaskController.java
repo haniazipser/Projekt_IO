@@ -21,12 +21,12 @@ public class TaskController {
     private final CourseApplicationService courseApplicationService;
     private final FileService fileService;
 
-    @GetMapping("")
+    /*@GetMapping("")
     public Set<TaskDto> getStudentsTasks(){
         System.out.println("w kontrolerze");
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return courseApplicationService.getStudentsTasks(email);
     }
-
+*/
 
 }
