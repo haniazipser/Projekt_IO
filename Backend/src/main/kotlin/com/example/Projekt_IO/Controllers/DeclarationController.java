@@ -1,6 +1,7 @@
 package com.example.Projekt_IO.Controllers;
 
 import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
+import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
 import com.example.Projekt_IO.Services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
@@ -55,6 +56,11 @@ public class DeclarationController {
     @PostMapping("/runMatching")
     public void runMatchingAlgorithm(){
         declarationService.runMatchingAlgorithm();
+    }
+
+    @GetMapping("/test/{lessonId}")
+    public List<DeclarationShortDto> testAllDeclarationsForLesson(@PathVariable UUID lessonId){
+        return declarationService.getAllDeclarationsForLesson(lessonId);
     }
 
     @DeleteMapping("/{declarationId}")
