@@ -55,6 +55,23 @@ struct LessonsView: View {
     
     @Environment(NetworkMonitor.self) private var networkMonitor
     
+    @State private var apiError: ApiError?
+    @State var loaded = false
+    
+        var viewState: ViewState {
+            if !networkMonitor.isConnected && !loaded {
+                return .offlineNotLoaded
+            } else if let error = apiError, networkMonitor.isConnected {
+                return .error(error)
+            } else if !loaded {
+                return .loading
+            } else if groupedLessons.isEmpty {
+                return .empty
+            } else {
+                return .loaded
+            }
+        }
+    
     var body: some View {
         VStack {
             ZStack {
@@ -91,6 +108,7 @@ struct LessonsView: View {
                     await fetchActivity(forceRefresh: true)
                 }
             }
+            .overlayFallback(viewState: viewState, fetchData: fetchLessons)
             .overlay {
                 if groupedLessons == [:] {
                     ContentUnavailableView("No lessons", systemImage: "person.3")

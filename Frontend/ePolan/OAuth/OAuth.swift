@@ -50,7 +50,11 @@ final class OAuthManager: NSObject, OIDAuthStateChangeDelegate {
     
     private func saveAuthState() async {
         guard let state = authState else {
-            try? KeychainHelper.shared.delete(key: keychainKey)
+            do {
+                try KeychainHelper.shared.delete(key: keychainKey)
+            } catch {
+                log.error("Keychain delete failed: \(error)")
+            }
             return
         }
         do {
