@@ -31,7 +31,7 @@ public class DeclarationController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .body(declarationService.getUsersDeclarations(email));
     }
 
@@ -40,7 +40,7 @@ public class DeclarationController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .body(declarationService.getUsersDeclarationsInCourse(email, courseId));
     }
 
@@ -49,7 +49,7 @@ public class DeclarationController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .body(declarationService.getDeclarationsForLesson(email, lessonId));
     }
 

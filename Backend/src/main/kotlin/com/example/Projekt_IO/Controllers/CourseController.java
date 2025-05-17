@@ -36,7 +36,7 @@ public class CourseController {
         System.out.println(email);
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
                 .body(courseService.getUsersGroups(email));
     }
 
@@ -44,7 +44,7 @@ public class CourseController {
     public ResponseEntity<List<String>> getStudentsInGroup(@PathVariable UUID courseId){
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
                 .body(courseService.getStudentsInGroup(courseId));
     }
 

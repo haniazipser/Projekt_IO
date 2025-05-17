@@ -27,7 +27,7 @@ public class LessonController {
     public ResponseEntity<List<ExerciseDto>> getExercisesForLesson(@PathVariable UUID lessonId){
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
                 .body(exerciseService.getExercisesForLesson(lessonId));
     }
 
@@ -41,7 +41,7 @@ public class LessonController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS))
                 .body(lessonService.getLessonsForCourse(courseId, email));
     }
 

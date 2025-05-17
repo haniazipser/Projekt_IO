@@ -24,7 +24,7 @@ public class PointController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .body(pointService.getUsersActivity(email));
     }
 
@@ -33,7 +33,7 @@ public class PointController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .body(pointService.getUsersActivityInCourse(email,courseId));
     }
 
