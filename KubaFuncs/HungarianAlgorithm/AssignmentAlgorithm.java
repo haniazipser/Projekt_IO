@@ -9,10 +9,23 @@
 public class AssignmentAlgorithm {
     
     public static int[][] assign(double[][] matrix) {
+        return assign(matrix, 0);
+    }
+
+    public static int[][] assign(double[][] matrix, int randomizeValue) {
 
         int rows = matrix.length;
         int cols = matrix[0].length;
         int maxSize = Math.max(rows, cols);
+
+        // Increase the costs in the atrix by a random value - this makes the algorithm more fair
+        if (randomizeValue > 0) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    matrix[i][j] += Math.random() * randomizeValue;
+                }
+            }
+        }
 
         // Convert the matrix to a square matrix, as the Hungarian algorithm requires a square matrix
         double[][] squareMatrix = new double[maxSize][maxSize];
