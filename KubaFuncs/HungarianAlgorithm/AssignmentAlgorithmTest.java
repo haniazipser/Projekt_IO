@@ -1,9 +1,6 @@
 /**
- * Self-contained test harness for AssignmentAlgorithm edge cases.
- * Includes tests for various matrix shapes and values,
- * including those containing Integer.MAX_VALUE.
+ * Self-contained test harness for AssignmentAlgorithm edge cases (double input matrices).
  */
-
 public class AssignmentAlgorithmTest {
 
     public static void main(String[] args) {
@@ -14,11 +11,12 @@ public class AssignmentAlgorithmTest {
         testMoreColumnsThanRows();
         testMatrixWithInfs();
         testAllInfsMatrix();
+        testDecimalValuesMatrix();
         System.out.println("All tests completed.");
     }
 
     private static void testSingleElementMatrix() {
-        int[][] matrix = {{5}};
+        double[][] matrix = {{5.0}};
         int[][] assignment = AssignmentAlgorithm.assign(matrix);
         if (assignment.length == 1
             && assignment[0][0] == 0
@@ -31,11 +29,11 @@ public class AssignmentAlgorithmTest {
     }
 
     private static void testSquareMatrix() {
-        int[][] matrix = {
-            {70, 40, 20, 55},
-            {65, 60, 45, 90},
-            {30, 45, 50, 75},
-            {25, 30, 55, 40}
+        double[][] matrix = {
+            {70.0, 40.0, 20.0, 55.0},
+            {65.0, 60.0, 45.0, 90.0},
+            {30.0, 45.0, 50.0, 75.0},
+            {25.0, 30.0, 55.0, 40.0}
         };
         int[][] expected = {{0,2}, {1,1}, {2,0}, {3,3}};
         int[][] assignment = AssignmentAlgorithm.assign(matrix);
@@ -48,10 +46,10 @@ public class AssignmentAlgorithmTest {
     }
 
     private static void testMoreRowsThanCols() {
-        int[][] matrix = {
-            {1, 2},
-            {2, 1},
-            {3, 3}
+        double[][] matrix = {
+            {1.0, 2.0},
+            {2.0, 1.0},
+            {3.0, 3.0}
         };
         int[][] expected = {{0,0}, {1,1}};
         int[][] assignment = AssignmentAlgorithm.assign(matrix);
@@ -65,17 +63,16 @@ public class AssignmentAlgorithmTest {
 
     private static void testEqualSquareMatrix() {
         int size = 3;
-        int[][] matrix = new int[size][size];
+        double[][] matrix = new double[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                matrix[i][j] = 5;
+                matrix[i][j] = 5.0;
             }
         }
         int[][] assignment = AssignmentAlgorithm.assign(matrix);
         boolean pass = (assignment.length == size);
         for (int[] pair : assignment) {
-            int col = pair[0], row = pair[1];
-            if (matrix[row][col] != 5) pass = false;
+            if (matrix[pair[1]][pair[0]] != 5.0) pass = false;
         }
         if (pass) {
             System.out.println("testEqualSquareMatrix: PASSED");
@@ -85,27 +82,28 @@ public class AssignmentAlgorithmTest {
     }
 
     private static void testMoreColumnsThanRows() {
-        int[][] matrix = {
-            {1, 2, 3},
-            {4, 5, 6}
+        double[][] matrix = {
+            {1.0, 2.0, 3.0},
+            {4.0, 5.0, 6.0}
         };
-        int[][] expected = {{0,0}, {1,1}};
-        int [][] expected2 = {{0,1}, {1, 0}}; // another possible assignment
+        int[][] expected1 = {{0,0}, {1,1}};
+        int[][] expected2 = {{0,1}, {1,0}};
         int[][] assignment = AssignmentAlgorithm.assign(matrix);
-        if (matches(assignment, expected) || matches(assignment, expected2)) {
+        if (matches(assignment, expected1) || matches(assignment, expected2)) {
             System.out.println("testMoreColumnsThanRows: PASSED");
         } else {
             System.err.println("testMoreColumnsThanRows: FAILED - expected "
-                + format(expected) + ", got " + format(assignment));
+                + format(expected1) + " or " + format(expected2)
+                + ", got " + format(assignment));
         }
     }
 
     private static void testMatrixWithInfs() {
-        int INF = Integer.MAX_VALUE;
-        int[][] matrix = {
-            {1, INF, 3},
-            {4, 2, INF},
-            {INF, 0, 1}
+        double INF = Double.MAX_VALUE;
+        double[][] matrix = {
+            {1.0, INF, 3.0},
+            {4.0, 2.0, INF},
+            {INF, 0.0, 1.0}
         };
         int[][] assignment = AssignmentAlgorithm.assign(matrix);
         if (assignment.length == 3) {
@@ -116,8 +114,8 @@ public class AssignmentAlgorithmTest {
     }
 
     private static void testAllInfsMatrix() {
-        int INF = Integer.MAX_VALUE;
-        int[][] matrix = {
+        double INF = Double.MAX_VALUE;
+        double[][] matrix = {
             {INF, INF},
             {INF, INF}
         };
@@ -126,6 +124,21 @@ public class AssignmentAlgorithmTest {
             System.out.println("testAllInfsMatrix: PASSED");
         } else {
             System.err.println("testAllInfsMatrix: FAILED - expected no assignments, got " + format(assignment));
+        }
+    }
+
+    private static void testDecimalValuesMatrix() {
+        double[][] matrix = {
+            {1.1, 0.9},
+            {2.5, 3.5}
+        };
+        int[][] expected = {{0,1}, {1,0}};
+        int[][] assignment = AssignmentAlgorithm.assign(matrix);
+        if (matches(assignment, expected)) {
+            System.out.println("testDecimalValuesMatrix: PASSED");
+        } else {
+            System.err.println("testDecimalValuesMatrix: FAILED - expected "
+                + format(expected) + ", got " + format(assignment));
         }
     }
 

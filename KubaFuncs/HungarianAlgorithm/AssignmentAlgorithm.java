@@ -1,30 +1,33 @@
 /**
- * This class implements the assignment algorithm using the Hungarian method.
- * It takes a cost matrix as input and returns the optimal assignment in the form of (col, row) pairs.
+ * An extension of the Kuhn–Munkres assignment algorithm of the year 1957.
+ * this implementation allows for non-square matrices by converting them to square matrices.
+ * 
+ * @author https://github.com/jnowak123 | May 2025
+ * @version 1.0
  */
 
 public class AssignmentAlgorithm {
     
-    public static int[][] assign(int[][] matrix) {
+    public static int[][] assign(double[][] matrix) {
 
         int rows = matrix.length;
         int cols = matrix[0].length;
         int maxSize = Math.max(rows, cols);
 
         // Convert the matrix to a square matrix, as the Hungarian algorithm requires a square matrix
-        int[][] squareMatrix = new int[maxSize][maxSize];
+        double[][] squareMatrix = new double[maxSize][maxSize];
         for (int i = 0; i < maxSize; i++) {
             for (int j = 0; j < maxSize; j++) {
                 if (i < rows && j < cols) {
                     squareMatrix[i][j] = matrix[i][j];
                 } else {
-                    squareMatrix[i][j] = Integer.MAX_VALUE; // Use a large value to indicate no assignment
+                    squareMatrix[i][j] = Double.MAX_VALUE; // Use a large value to indicate no assignment
                 }
             }
         }
 
         // Run the Hungarian algorithm on the square matrix
-        int[][] copyMatrix = new int[maxSize][maxSize];
+        double[][] copyMatrix = new double[maxSize][maxSize];
         for (int i = 0; i < maxSize; i++) {
             for (int j = 0; j < maxSize; j++) {
                 copyMatrix[i][j] = squareMatrix[i][j];
@@ -37,7 +40,7 @@ public class AssignmentAlgorithm {
         int[][] result = new int[cols][2];
         int resultIndex = 0;
         for (int i = 0; i < assignment.length; i++) {
-            if (squareMatrix[assignment[i][1]][assignment[i][0]] != Integer.MAX_VALUE) {
+            if (squareMatrix[assignment[i][1]][assignment[i][0]] != Double.MAX_VALUE) {
                 result[resultIndex][0] = assignment[i][0];
                 result[resultIndex][1] = assignment[i][1];
                 resultIndex++;
