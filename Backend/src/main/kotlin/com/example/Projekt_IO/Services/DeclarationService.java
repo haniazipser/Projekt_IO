@@ -73,7 +73,7 @@ public class DeclarationService {
             Double sum = activity.stream().mapToDouble(PointDto::getActivityValue).sum();
             shortDeclarations.add(new DeclarationShortDto(declaration,sum));
         }
-        return shortDeclarations;
+        return shortDeclarations.stream().sorted(Comparator.comparing(DeclarationShortDto::getStudent)).collect(Collectors.toList());
     }
 
     public Integer getDeclarationsForSessionCount(String email, UUID id) {
