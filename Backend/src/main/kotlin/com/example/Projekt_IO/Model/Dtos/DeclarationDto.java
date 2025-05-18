@@ -9,13 +9,14 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter @Setter
 public class DeclarationDto {
     private UUID id;
-    private LocalDateTime declarationDate;
+    private Instant declarationDate;
 
     private DeclarationStatus declarationStatus;
 

@@ -5,26 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
-
 @Getter @Setter
-public class ExerciseDto {
+public class ExerciseWithPointsDto {
     private UUID id;
-    private Instant classDate;
-    private String groupName;
     private Integer exerciseNumber;
     private String subpoint;
     private String approvedStudent;
-    public ExerciseDto(Exercise exercise){
+    private Double approvedStudentsPoints;
+    public ExerciseWithPointsDto(Exercise exercise, Double points){
         this.id=exercise.getId();
-        this.classDate = exercise.getLesson().getClassDate();
-        this.groupName = exercise.getLesson().getCourse().getName();
         this.exerciseNumber = exercise.getExerciseNumber();
         this.subpoint = exercise.getSubpoint();
         this.approvedStudent = exercise.getApprovedStudent();
-
+        this.approvedStudentsPoints = points;
     }
-
-    public ExerciseDto(){}
 }

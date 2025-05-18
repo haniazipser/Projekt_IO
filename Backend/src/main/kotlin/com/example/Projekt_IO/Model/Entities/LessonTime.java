@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -15,8 +16,6 @@ import java.util.Objects;
 public class LessonTime {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
-
-    private LocalTime time;
     public LessonTime(){};
 
     @Override
@@ -24,13 +23,12 @@ public class LessonTime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LessonTime that = (LessonTime) o;
-        return dayOfWeek == that.dayOfWeek &&
-                Objects.equals(time, that.time);
+        return dayOfWeek == that.dayOfWeek ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dayOfWeek, time);
+        return Objects.hash(dayOfWeek);
     }
 
 }

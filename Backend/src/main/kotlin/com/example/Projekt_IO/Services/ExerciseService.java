@@ -1,7 +1,8 @@
 package com.example.Projekt_IO.Services;
 
-import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
+import com.example.Projekt_IO.Model.Dtos.*;
 import com.example.Projekt_IO.Model.Entities.Exercise;
+import com.example.Projekt_IO.Model.Entities.ExerciseDeclaration;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
+    private final PointService pointService;
     public List<ExerciseDto> getExercisesForLesson(UUID lessonId) {
         return exerciseRepository.findByLesson_Id(lessonId).stream()
                 .map((e -> new ExerciseDto(e))).sorted(Comparator.comparing(ExerciseDto::getExerciseNumber)
@@ -57,6 +59,17 @@ public class ExerciseService {
             exerciseRepository.save(newExercise);
         }
 
+    }
+
+    public Set<ExerciseWithPointsDto> getList(UUID lessonId) {
+        Set<Exercise> exercises = exerciseRepository.findByLesson_Id(lessonId);
+        Set<ExerciseWithPointsDto> exercisesWithPoints = new HashSet<>();
+        for (Exercise exercise : exercises){
+            List<PointDto>activity = pointService.getUsersActivityInCourse(exercise.getApprovedStudent(), exercise.getLesson().getCourse().getId());
+            Double sum = activity.stream().mapToDouble(PointDto::getActivityValue).sum();
+            exercisesWithPoints.add(new ExerciseWithPointsDto(exercise,sum));
+        }
+        return exercisesWithPoints;
     }
 
 }

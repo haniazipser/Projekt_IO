@@ -1,37 +1,70 @@
-INSERT INTO course (id, name, instructor, creator)
+-- Kurs
+INSERT INTO course (id, name, instructor, creator, start_date, end_date, frequency, course_code)
 VALUES
-('3ed7747e-490f-45f6-a1fb-86c9764e75f2','Computer Science', 'polanski@gmail.com', 'janesmith@gmail.com'),
-('e5965121-1fae-428c-a13f-4e6c741db180','Discrete Mathematics', 'zygadlo@gmail.com', 'johndoe@gmail.com');
+('a1111111-2222-4333-8444-555555555555','Advanced Algorithms', 'dr.brecht@uni.edu', 'admin@uni.edu', '2025-03-01 00:00:00', '2025-07-31 00:00:00', 1, '110fb02f-4514-40d3-8398-9d1d517b0ebc');
 
-INSERT INTO course_lesson_times (course_id, day_of_week, time)
+-- Dni tygodnia
+INSERT INTO course_lesson_times (course_id, day_of_week)
 VALUES
-('3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'MONDAY', '10:00:00'),
-('e5965121-1fae-428c-a13f-4e6c741db180', 'WEDNESDAY', '12:00:00');
+('a1111111-2222-4333-8444-555555555555', 'THURSDAY');
 
-INSERT INTO lesson (id,class_date, course_id)
+-- Uczestnik
+INSERT INTO participant(id, email, course_id, invitation_status)
 VALUES
-('b0e58980-811a-4832-89c8-ccf4a60bf4be','2025-05-01 08:00:00', '3ed7747e-490f-45f6-a1fb-86c9764e75f2'),
-('5bf58f41-75d7-42e6-86a5-e7b4d01d7e62','2025-05-03 10:00:00','e5965121-1fae-428c-a13f-4e6c741db180');
+('d4f5e6e7-1234-4567-89ab-101112131415','brecht@rybik.eu', 'a1111111-2222-4333-8444-555555555555', 'ACCEPTED');
 
-INSERT INTO exercise (id,lesson_id, exercise_number, subpoint, approved_student)
+-- LEKCJE
+INSERT INTO lesson (id, class_date, course_id)
 VALUES
-('f3b08d44-76d6-41bf-936e-392c90a63307','b0e58980-811a-4832-89c8-ccf4a60bf4be', 1, 'a', 'johndoe@gmail.com'),
-('5cbf7d41-744a-46c1-84e3-988e37693436','b0e58980-811a-4832-89c8-ccf4a60bf4be', 2, NULL, NULL),
-('bacba752-8fef-4b0d-8c9e-2325e4933e0b','5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 1, NULL, 'AliceBrown@gmail.com');
+('02f5fc3a-f339-432f-a97d-f58be7cfb500','2025-04-10 14:00:00','a1111111-2222-4333-8444-555555555555'),
+('b32fa49b-b885-4911-aac2-2910b04817b4','2025-04-17 14:00:00','a1111111-2222-4333-8444-555555555555'),
+('31ac5c2d-761e-4d5c-96ed-37d66dabc9cf','2025-05-05 14:00:00','a1111111-2222-4333-8444-555555555555'),
+('f6717a87-9dd8-4d59-98ab-2f49e40b3652','2025-05-09 14:00:00','a1111111-2222-4333-8444-555555555555'),
+('a89cb383-f4a3-4cb0-949a-b4f7c04c54fc','2025-05-15 14:00:00','a1111111-2222-4333-8444-555555555555'),
+('158a7278-c5c6-47d6-b26d-53dc1b13a17f','2025-06-01 14:00:00','a1111111-2222-4333-8444-555555555555');
 
+-- ĆWICZENIA (2 na lekcję)
+INSERT INTO exercise (id, lesson_id, exercise_number, subpoint, approved_student)
+VALUES
+-- PAST
+('b0457de3-f1d4-4c5e-84c5-4f5aa3a259a7','02f5fc3a-f339-432f-a97d-f58be7cfb500', 1, 'a', 'brecht@rybik.eu'),
+('f938c49d-b1d2-4e1b-a5a2-9f0e071d582f','02f5fc3a-f339-432f-a97d-f58be7cfb500', 2, NULL, NULL),
+('6a2f8499-3fc3-45d1-bdfb-dc55d402b865','b32fa49b-b885-4911-aac2-2910b04817b4', 1, 'a', NULL),
+('35d8ec74-5c29-4d09-b6f1-46df38d38d87','b32fa49b-b885-4911-aac2-2910b04817b4', 2, NULL, 'brecht@rybik.eu'),
+-- NEAR
+('ed998758-7207-4a33-b9be-ec33ec137a5e','31ac5c2d-761e-4d5c-96ed-37d66dabc9cf', 1, NULL, NULL),
+('126c2bfc-5c57-4b71-b5a1-73c2f0f3fc07','31ac5c2d-761e-4d5c-96ed-37d66dabc9cf', 2, NULL, NULL),
+('40d3482f-9f6e-46b7-b6cf-e2eae4a949d1','f6717a87-9dd8-4d59-98ab-2f49e40b3652', 1, NULL, NULL),
+('1c5fba12-1656-4680-90f2-e4a9f719e89f','f6717a87-9dd8-4d59-98ab-2f49e40b3652', 2, NULL, NULL),
+-- FUTURE
+('ac63f2aa-10a6-4d0b-b5f6-3b0a29b57c9d','a89cb383-f4a3-4cb0-949a-b4f7c04c54fc', 1, NULL, NULL),
+('3aa6dc86-b29b-420d-bca1-1f13f9e28485','a89cb383-f4a3-4cb0-949a-b4f7c04c54fc', 2, NULL, NULL),
+('ed5ce66e-4b2f-4dd0-bfd8-74034378e95c','158a7278-c5c6-47d6-b26d-53dc1b13a17f', 1, NULL, NULL),
+('bfae58aa-850c-4f7c-88a0-5701dfb13f8e','158a7278-c5c6-47d6-b26d-53dc1b13a17f', 2, NULL, NULL);
+
+-- DEKLARACJE
 INSERT INTO exercise_declaration (id, declaration_date, declaration_status, exercise_id, student)
 VALUES
-('90cc01ff-cf3f-43e4-839e-5478b51485c9','2025-04-25 10:00:00', 'WAITING', 'f3b08d44-76d6-41bf-936e-392c90a63307', 'johndoe@gmail.com'),
-('1a602a7c-3fb9-4777-8521-6405323c962f','2025-04-25 10:05:00', 'APPROVED', '5cbf7d41-744a-46c1-84e3-988e37693436', 'janesmith@gmail.com'),
-('4c6e2fc9-0959-4a79-8992-f14cecd45a60','2025-04-25 10:10:00', 'REJECTED', '5cbf7d41-744a-46c1-84e3-988e37693436', 'AliceBrown@gmail.com');
+-- PAST
+('be00c462-cf56-41a9-850d-8c8ff4d3e307','2025-04-08 10:00:00','APPROVED','b0457de3-f1d4-4c5e-84c5-4f5aa3a259a7','brecht@rybik.eu'),
+('0e58e63c-196f-4b85-81bc-4a7d2892d5e7','2025-04-08 10:30:00','REJECTED','f938c49d-b1d2-4e1b-a5a2-9f0e071d582f','brecht@rybik.eu'),
+('e7e418d2-e5e3-41ee-bd92-7a02a6e338a6','2025-04-15 11:00:00','CANCELLED','6a2f8499-3fc3-45d1-bdfb-dc55d402b865','brecht@rybik.eu'),
+('ce38d81b-2234-4dd5-b15a-6480c1c17b6f','2025-04-15 12:00:00','APPROVED','35d8ec74-5c29-4d09-b6f1-46df38d38d87','brecht@rybik.eu'),
+-- NEAR
+('daee8887-2041-41a7-8e70-747b4280d8ff','2025-05-02 09:00:00','WAITING','ed998758-7207-4a33-b9be-ec33ec137a5e','brecht@rybik.eu'),
+('df6e9b39-31d3-42c4-90c8-25581bb6c278','2025-05-02 09:30:00','REJECTED','126c2bfc-5c57-4b71-b5a1-73c2f0f3fc07','brecht@rybik.eu'),
+('b9a7685f-4490-4d14-bc32-9bbfdac240f8','2025-05-02 10:00:00','WAITING','40d3482f-9f6e-46b7-b6cf-e2eae4a949d1','brecht@rybik.eu'),
+('a401f6db-eef6-4b5a-acc5-1b52c34467e8','2025-05-02 10:30:00','CANCELLED','1c5fba12-1656-4680-90f2-e4a9f719e89f','brecht@rybik.eu'),
+-- FUTURE
+('a0f04bfb-41ce-43ec-82a5-8ae6e1bdeae2','2025-05-03 11:00:00','WAITING','ac63f2aa-10a6-4d0b-b5f6-3b0a29b57c9d','brecht@rybik.eu'),
+('2ec86eb3-b257-46f3-9a0f-6ad6b9c918b5','2025-05-03 11:30:00','WAITING','3aa6dc86-b29b-420d-bca1-1f13f9e28485','brecht@rybik.eu'),
+('e3080533-38d2-4a27-b69f-7f94ea60aa71','2025-05-03 12:00:00','WAITING','ed5ce66e-4b2f-4dd0-bfd8-74034378e95c','brecht@rybik.eu'),
+('5f419d2a-6a6c-4b79-b232-f10d7de109a0','2025-05-03 12:30:00','WAITING','bfae58aa-850c-4f7c-88a0-5701dfb13f8e','brecht@rybik.eu');
 
-INSERT INTO point (id,student, lesson_id, activity_value) VALUES
-('4f5288c2-4a52-4b36-8f5a-8e32ab095922','johndoe@gmail.com', 'b0e58980-811a-4832-89c8-ccf4a60bf4be', 1.0),
-('230eff0a-c2a8-44c9-b33a-1520cfaa6121','janesmith@gmail.com', '5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 0.5),
-('3d81c604-d41c-432f-a88c-c073a71bf165','AliceBrown@gmail.com', '5bf58f41-75d7-42e6-86a5-e7b4d01d7e62', 1.0);
-
-INSERT INTO participant(id, email, course_id, invitation_status) values
-('f2da439f-ddbc-4151-ba82-04cb46f9dd2e','johndoe@gmail.com', '3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'ACCEPTED'),
-('cb8585d5-0a9c-4fe8-a81e-4d14f0d3b795','janesmith@gmail.com', '3ed7747e-490f-45f6-a1fb-86c9764e75f2', 'ACCEPTED'),
-('d9534897-596e-4458-8417-4525f92ff8b2','johndoe@gmail.com', 'e5965121-1fae-428c-a13f-4e6c741db180', 'ACCEPTED');
-
+-- PUNKTY
+INSERT INTO point (id, student, lesson_id, activity_value)
+VALUES
+('6e3a6e8f-00f0-41aa-babe-c93f841d8854','brecht@rybik.eu','02f5fc3a-f339-432f-a97d-f58be7cfb500', 1.0),
+('acb5de30-879e-4a5b-bb38-bdbf5c5a90a4','brecht@rybik.eu','b32fa49b-b885-4911-aac2-2910b04817b4', 0.5),
+('a595cfaa-5535-4d56-9824-1a60c3f26b2a','brecht@rybik.eu','31ac5c2d-761e-4d5c-96ed-37d66dabc9cf', 0.0),
+('df2f208f-36e0-4f9e-9856-d27d0b4d2f62','brecht@rybik.eu','f6717a87-9dd8-4d59-98ab-2f49e40b3652', 0.0);
