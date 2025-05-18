@@ -9,21 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.ArrayList;
-
-import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
-import com.example.Projekt_IO.Model.Entities.Exercise;
-
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.UUID;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
