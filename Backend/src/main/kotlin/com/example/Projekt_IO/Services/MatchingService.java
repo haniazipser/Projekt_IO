@@ -57,7 +57,7 @@ public class MatchingService {
             }
 
             Exercise exercise = exercise.get();
-            exercise.setApprovedStudent(pair[0]);
+            exercise.setApprovedStudent(pair[0]);x
             exerciseRepository.save(exercise);
         }
 
