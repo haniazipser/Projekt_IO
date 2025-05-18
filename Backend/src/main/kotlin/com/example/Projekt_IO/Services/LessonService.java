@@ -1,5 +1,6 @@
 package com.example.Projekt_IO.Services;
 
+import com.example.Projekt_IO.Model.Dtos.LessonDescriptionDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
 import com.example.Projekt_IO.Model.Entities.Course;
@@ -93,8 +94,8 @@ public class LessonService {
         }
     }
 
-    public LessonDto getLessonInfo(UUID lessonId){
-        return new LessonDto(lessonRepository.findById(lessonId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found")));
+    public LessonDescriptionDto getLessonInfo(UUID lessonId){
+        return new LessonDescriptionDto(lessonRepository.findById(lessonId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found")));
     }
 /*
     public void updateExercisesForLesson(LessonDto lessonDto) {

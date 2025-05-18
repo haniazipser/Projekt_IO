@@ -1,5 +1,7 @@
 package com.example.Projekt_IO.Services;
 
+import com.example.Projekt_IO.Model.Dtos.LessonDescriptionDto;
+import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 
 @Service
@@ -32,12 +37,23 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendMessageWithList(String to) throws MessagingException, FileNotFoundException {
+    public void sendMessageWithList(String to, LessonDescriptionDto lesson, String name) throws MessagingException, FileNotFoundException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        LocalDate date = LocalDate.from(lesson.getClassDate().atZone(ZoneId.systemDefault()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        String formattedDate = date.format(formatter);
 
-        String subject = "List";
-        String bodyContent = "List of exercises";
+        String subject = "Exercise List for " + lesson.getCourseName()+ " – " + formattedDate;
+
+        String bodyContent = """
+            Dear Professor,
+            
+            You'll find the exercise list for the class scheduled on %s attached to this email.
+           
+            Kind regards,
+            ePolan Team
+            """.formatted(formattedDate, lesson.getCourseName());
 
         helper.setTo(to);
         helper.setSubject(subject);
@@ -46,9 +62,9 @@ public class EmailService {
         String htmlContent = buildHtmlContent(subject, bodyContent);
         helper.setText(htmlContent, true);
 
-        File pdfFile = new File("List.pdf");
+        File pdfFile = new File(name);
         if (pdfFile.exists()) {
-            helper.addAttachment("List.pdf", pdfFile);
+            helper.addAttachment(name, pdfFile);
         } else {
             throw new FileNotFoundException("Attachment file not found: " + pdfFile.getAbsolutePath());
         }

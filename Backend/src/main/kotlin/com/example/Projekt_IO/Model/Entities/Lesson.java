@@ -17,7 +17,6 @@ import java.util.UUID;
 @Table(name = "lesson")
 public class Lesson {
     @Id
-
     private UUID id;
     private Instant classDate;
     @ManyToOne
