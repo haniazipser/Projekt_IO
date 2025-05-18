@@ -33,11 +33,24 @@ public class CourseController {
     @GetMapping("/courses")
     public ResponseEntity<List<CourseDto>> getStudentGroups(){
         String email = userInfoService.getLoggedUserInfo().getEmail();
-        System.out.println(email);
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
                 .body(courseService.getUsersGroups(email));
+    }
+
+    @GetMapping("/courses/archived")
+    public ResponseEntity<List<CourseDto>> getStudentArchivedGroups(){
+        String email = userInfoService.getLoggedUserInfo().getEmail();
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).mustRevalidate())
+                .body(courseService.getUsersArchivedGroups(email));
+    }
+
+    @PutMapping("/{courseId}")
+    public void unarchiveCourse(@PathVariable UUID courseId){
+        courseService.unarchiveCourse(courseId);
     }
 
     @GetMapping("{courseId}/students")

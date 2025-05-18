@@ -159,4 +159,21 @@ public class CourseService {
         participantRepository.save(participant);
 
     }
+
+    public List<CourseDto> getUsersArchivedGroups(String email) {
+        return courseRepository.findDistinctByStudents_EmailAndStudents_InvitationStatus(email, InvitationStatus.ARCHIVED)
+                .stream().map(g -> new CourseDto(g)).sorted(Comparator.comparing(CourseDto::getId)).collect(Collectors.toList());
+    }
+
+    public void unarchiveCourse(UUID courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Course not found"));
+        UserDto loggedUser = userInfoService.getLoggedUserInfo();
+        for (Participant p : course.getStudents()) {
+            if (p.getEmail().toLowerCase().equals(loggedUser.getEmail().toLowerCase())) {
+                p.setInvitationStatus(InvitationStatus.ACCEPTED);
+                participantRepository.save(p);
+                break;
+            }
+        }
+    }
 }
