@@ -58,6 +58,7 @@ public class CourseService {
                 Lesson lesson = new Lesson();
                 lesson.setClassDate(next);
                 lesson.setCourse(course);
+                lesson.setLessonExercises(Collections.emptySet());
                 lessonRepository.save(lesson);
                 lessons.add(lesson);
                 next  = next.plus(7 * course.getFrequency(), ChronoUnit.DAYS);
