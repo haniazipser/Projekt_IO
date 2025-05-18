@@ -19,8 +19,11 @@ public class ExerciseService {
     private final PointService pointService;
     public List<ExerciseDto> getExercisesForLesson(UUID lessonId) {
         return exerciseRepository.findByLesson_Id(lessonId).stream()
-                .map((e -> new ExerciseDto(e))).sorted(Comparator.comparing(ExerciseDto::getExerciseNumber)
-                        .thenComparing(ExerciseDto::getSubpoint)).collect(Collectors.toList());
+                .map(ExerciseDto::new)
+                .sorted(Comparator.comparing(ExerciseDto::getExerciseNumber).thenComparing(
+                                Comparator.comparing(ExerciseDto::getSubpoint, Comparator.nullsFirst(Comparator.naturalOrder()))
+                        ))
+                .collect(Collectors.toList());
     }
 
     public Set<ExerciseDto> getAssignedExercisesForLesson(String email, UUID id) {
@@ -72,4 +75,7 @@ public class ExerciseService {
         return exercisesWithPoints;
     }
 
+    public int getNumberOfExercises(UUID lessonId) {
+        return exerciseRepository.countByLesson_Id(lessonId);
+    }
 }
