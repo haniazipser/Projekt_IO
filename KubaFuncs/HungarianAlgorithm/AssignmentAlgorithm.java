@@ -24,6 +24,7 @@ public class AssignmentAlgorithm {
                 for (int j = 0; j < cols; j++) {
                     if (matrix[i][j] != Double.MAX_VALUE) {
                         matrix[i][j] += Math.random() * randomizeValue;
+                    }
                 }
             }
         }
