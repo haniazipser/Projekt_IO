@@ -20,6 +20,7 @@ public class DeclarationController {
     private final DeclarationService declarationService;
     private final UserInfoService userInfoService;
     private final ExerciseApplicationService exerciseApplicationService;
+
     @PostMapping("/{exerciseId}")
     public void declareExercise ( @PathVariable UUID exerciseId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
@@ -51,11 +52,6 @@ public class DeclarationController {
                 .ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .body(declarationService.getDeclarationsForLesson(email, lessonId));
-    }
-
-    @PostMapping("/runMatching")
-    public void runMatchingAlgorithm(){
-        declarationService.runMatchingAlgorithm();
     }
 
     @GetMapping("/test/{lessonId}")

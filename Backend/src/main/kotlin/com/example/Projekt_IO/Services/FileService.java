@@ -1,9 +1,6 @@
 package com.example.Projekt_IO.Services;
 
-import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
-import com.example.Projekt_IO.Model.Dtos.ExerciseDto;
-import com.example.Projekt_IO.Model.Dtos.LessonDto;
-import com.example.Projekt_IO.Model.Dtos.UserDto;
+import com.example.Projekt_IO.Model.Dtos.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
@@ -13,24 +10,51 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class FileService {
     private final KeycloakClientService keycloakClientService;
-    public void createPDFList(Set<ExerciseDto> exercises, LessonDto lesson) throws FileNotFoundException, DocumentException {
+    public String createPDFList(List<ExerciseWithPointsDto> exercises1,List<ExerciseWithPointsDto> exercises2, LessonDescriptionDto lesson) throws FileNotFoundException, DocumentException {
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream("List.pdf"));
+        LocalDate date = LocalDate.from(lesson.getClassDate().atZone(ZoneId.systemDefault()));
+        String name = "List_" +lesson.getCourseName().replace(' ','_')+"_"+date.toString()+".pdf";
+        PdfWriter.getInstance(document, new FileOutputStream(name));
 
         document.open();
         Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
-        LocalDate date = LocalDate.from(lesson.getClassDate().atZone(ZoneId.systemDefault()));
-        Paragraph title = new Paragraph("List for " + lesson.getCourseName() + " "+ date.toString(), titleFont);
+
+        Paragraph title = new Paragraph("List for " + lesson.getCourseName() + " "+ date.toString() + " - by number of points", titleFont);
         title.setSpacingAfter(20);
         document.add(title);
         Font font = FontFactory.getFont(FontFactory.HELVETICA, 16, BaseColor.BLACK);
-        for (ExerciseDto e : exercises) {
+        int i = 1;
+        for (ExerciseWithPointsDto e : exercises2) {
+            StringBuilder line = new StringBuilder();
+            String user = keycloakClientService.getUserByEmail(e.getApprovedStudent()).block();
+
+            line.append(i).append(". ").append(user).append(" —> ");
+
+            line.append("Ex.").append(e.getExerciseNumber());
+
+            if (e.getSubpoint() != null && !e.getSubpoint().isEmpty()) {
+                line.append(e.getSubpoint());
+            }
+
+            Paragraph paragraph = new Paragraph(line.toString(), font);
+            paragraph.setSpacingAfter(10);
+
+            document.add(paragraph);
+            i++;
+        }
+        document.newPage();
+        title = new Paragraph("List for " + lesson.getCourseName() + " "+ date.toString() + " - by exercises", titleFont);
+        title.setSpacingAfter(20);
+        document.add(title);
+
+        for (ExerciseWithPointsDto e : exercises1) {
             StringBuilder line = new StringBuilder();
 
             line.append("Ex.").append(e.getExerciseNumber());
@@ -48,6 +72,8 @@ public class FileService {
 
             document.add(paragraph);
         }
+
         document.close();
+        return name;
     }
 }

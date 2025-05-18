@@ -15,10 +15,12 @@ public class LessonDescriptionDto {
     private Instant classDate;
     private String courseName;
     private LessonStatus status;
+    private String instructor;
     public LessonDescriptionDto(Lesson lesson){
         this.id = lesson.getId();
         this.classDate = lesson.getClassDate();
         this.courseName = lesson.getCourse().getName();
         this.status = lesson.getLessonStatus();
+        this.instructor = lesson.getCourse().getInstructor();
     }
 }
