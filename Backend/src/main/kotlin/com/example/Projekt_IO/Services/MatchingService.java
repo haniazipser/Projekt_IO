@@ -1,29 +1,19 @@
 package com.example.Projekt_IO.Services;
 
 import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
+import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-
-import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
-import com.example.Projekt_IO.Model.Entities.Exercise;
-
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -36,46 +26,77 @@ import java.util.HashMap;
 public class MatchingService {
     private final DeclarationService declarationService;
     private final ExerciseRepository exerciseRepository;
+    private final LessonService lessonService;
+
+    @Scheduled(cron = "0 37 21 * * ?")
+    @Transactional
+    public void scheduleTask() {
+        System.out.print("UDALO SIE WEJSC DO SCHEDULERA");
+        List<UUID> lessons = lessonService.getNextLessons();
+        for (UUID l : lessons){
+            matchingAlgorithm(l);
+        }
+    }
 
     public void matchingAlgorithm(UUID lessonId){
-        List<DeclarationShortDto> declarations = declarationService.getAllDeclarationsForLesson(lessonId);
+        List<DeclarationShortDto> declarations =
+                declarationService.getAllDeclarationsForLesson(lessonId);
 
-        HashMap<String, Integer> studentHashMap = new HashMap<>();
-        HashMap<UUID, Integer> taskHashMap = new HashMap<>();
-        int studentIndex = 0, taskIndex = 0;
+        // maps from id → index
+        HashMap<String,Integer> studentMap = new HashMap<>();
+        HashMap<UUID,Integer>   taskMap    = new HashMap<>();
 
-        for (DeclarationShortDto declaration : declarations) {
-            if (!studentHashMap.containsKey(declaration.getStudent())) {
-                studentHashMap.put(declaration.getStudent(), studentIndex++);
+        int nStudents = 0, nTasks = 0;
+
+        // lists from index → id
+        List<String> studentList = new ArrayList<>();
+        List<UUID>   taskList    = new ArrayList<>();
+
+        // build maps and lists
+        for (DeclarationShortDto d : declarations) {
+            String student = d.getStudent();
+            if (!studentMap.containsKey(student)) {
+                studentMap.put(student, nStudents++);
+                studentList.add(student);
             }
-            if (!taskHashMap.containsKey(declaration.getExerciseId())) {
-                taskHashMap.put(declaration.getExerciseId(), taskIndex++);
+
+            UUID task = d.getExerciseId();
+            if (!taskMap.containsKey(task)) {
+                taskMap.put(task, nTasks++);
+                taskList.add(task);
             }
         }
 
-        double[][] costMatrix = new double[studentIndex][taskIndex];
-        for (DeclarationShortDto declaration : declarations) {
-            int studentIdx = studentHashMap.get(declaration.getStudent());
-            int taskIdx = taskHashMap.get(declaration.getExerciseId());
-            costMatrix[taskIdx][studentIdx] = declaration.getPointsInCourse();
+        // build cost matrix [tasks][students]
+        double[][] cost = new double[nTasks][nStudents];
+
+        for (DeclarationShortDto d : declarations) {
+            int i = taskMap.get(d.getExerciseId());
+            int j = studentMap.get(d.getStudent());
+            cost[i][j] = d.getPointsInCourse();
         }
 
-        int[][] assignment = AssignmentAlgorithm.assign(costMatrix);
+        // run the assignment
+        int[][] assignment = AssignmentAlgorithm.assign(cost);
 
-        for (int[] pair : assignment){
-            Optional<Exercise> e = exerciseRepository.findById(pair[1]);
+        // apply assignments
+        for (int[] pair : assignment) {
+            int studentIdx = pair[0];
+            int taskIdx    = pair[1];
 
-            if (e.isEmpty()){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found");
-            }
+            String studentId = studentList.get(studentIdx);
+            UUID   taskId    = taskList.get(taskIdx);
 
-            Exercise exercise = e.get();
-            exercise.setApprovedStudent(pair[0]);
-            exerciseRepository.save(exercise);
+            Exercise ex = exerciseRepository.findById(taskId)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Exercise not found: " + taskId));
+
+            ex.setApprovedStudent(studentId);
+            exerciseRepository.save(ex);
         }
-
     }
 }
+
 
 /**
  * An implemetation of the Kuhn–Munkres assignment algorithm of the year 1957.
@@ -357,6 +378,7 @@ class HungarianAlgorithm {
         Arrays.fill(colIsCovered, 0);
     }
 }
+
 
 /**
  * An extension of the Kuhn–Munkres assignment algorithm of the year 1957.

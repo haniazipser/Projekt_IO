@@ -16,4 +16,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise, UUID> {
     Set<Exercise> findByApprovedStudentAndLesson_Id(String email, UUID id);
 
     Set<Exercise>  findByLesson(Lesson lesson);
+
+    int countByLesson_Id(UUID lessonId);
 }
