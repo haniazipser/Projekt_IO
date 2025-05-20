@@ -26,6 +26,7 @@ public class MatchingService {
     private final DeclarationService declarationService;
     private final ExerciseRepository exerciseRepository;
     private final LessonService lessonService;
+    private final ExerciseApplicationService exerciseApplicationService;
 
     @Scheduled(cron = "0 37 21 * * ?")
     @Transactional
@@ -34,6 +35,7 @@ public class MatchingService {
         List<UUID> lessons = lessonService.getNextLessons();
         for (UUID l : lessons){
             matchingAlgorithm(l);
+            exerciseApplicationService.exportListToPdf(l);
         }
     }
 
