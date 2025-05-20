@@ -5,7 +5,9 @@ import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -23,10 +25,21 @@ import java.util.HashMap;
 public class MatchingService {
     private final DeclarationService declarationService;
     private final ExerciseRepository exerciseRepository;
+    private final LessonService lessonService;
+
+    @Scheduled(cron = "0 37 21 * * ?")
+    @Transactional
+    public void scheduleTask() {
+        System.out.print("UDALO SIE WEJSC DO SCHEDULERA");
+        List<UUID> lessons = lessonService.getNextLessons();
+        for (UUID l : lessons){
+            matchingAlgorithm(l);
+        }
+    }
 
     public void matchingAlgorithm(UUID lessonId){
         List<DeclarationShortDto> declarations =
-            declarationService.getAllDeclarationsForLesson(lessonId);
+                declarationService.getAllDeclarationsForLesson(lessonId);
 
         // maps from id → index
         HashMap<String,Integer> studentMap = new HashMap<>();
@@ -62,7 +75,7 @@ public class MatchingService {
             cost[i][j] = d.getPointsInCourse();
         }
 
-        // run the assignment 
+        // run the assignment
         int[][] assignment = AssignmentAlgorithm.assign(cost);
 
         // apply assignments
@@ -74,8 +87,8 @@ public class MatchingService {
             UUID   taskId    = taskList.get(taskIdx);
 
             Exercise ex = exerciseRepository.findById(taskId)
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Exercise not found: " + taskId));
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Exercise not found: " + taskId));
 
             ex.setApprovedStudent(studentId);
             exerciseRepository.save(ex);
@@ -371,13 +384,13 @@ class HungarianAlgorithm {
  * this implementation allows for non-square matrices by converting them to square matrices.
  * It also adds a random value to the costs in the matrix to make the algorithm more fair
  * The algorithm is run in a loop until no new assignments are found - allowing for multiple assignments for one student
- * 
+ *
  * @author https://github.com/jnowak123 | May 2025
  * @version 1.0
  */
 
 class AssignmentAlgorithm {
-    
+
     public static int[][] assign(double[][] matrix) {
         return assign(matrix, 0);
     }

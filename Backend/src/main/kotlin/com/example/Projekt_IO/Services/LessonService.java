@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -96,6 +98,16 @@ public class LessonService {
 
     public LessonDescriptionDto getLessonInfo(UUID lessonId){
         return new LessonDescriptionDto(lessonRepository.findById(lessonId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found")));
+    }
+
+    public List<UUID> getNextLessons() {
+        ZoneId zone = ZoneId.systemDefault();
+
+        LocalDate tomorrow = LocalDate.now(zone).plusDays(1);
+        Instant startOfDay = tomorrow.atStartOfDay(zone).toInstant();
+        Instant endOfDay = tomorrow.plusDays(1).atStartOfDay(zone).toInstant();
+
+        return lessonRepository.findLessonIdsByClassDateBetween(startOfDay, endOfDay);
     }
 /*
     public void updateExercisesForLesson(LessonDto lessonDto) {
