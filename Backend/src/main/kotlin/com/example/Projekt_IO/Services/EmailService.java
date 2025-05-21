@@ -2,6 +2,7 @@ package com.example.Projekt_IO.Services;
 
 import com.example.Projekt_IO.Model.Dtos.LessonDescriptionDto;
 import com.example.Projekt_IO.Model.Dtos.LessonDto;
+import com.example.Projekt_IO.Model.Entities.Lesson;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,6 @@ public class EmailService {
 
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setFrom("noreply@example.com");
 
         String htmlContent = buildHtmlContent(subject, bodyContent);
         helper.setText(htmlContent, true); // 'true' indicates HTML
@@ -118,5 +118,18 @@ public class EmailService {
             </body>
             </html>
             """.formatted(title, body.replace("\n", "<br>"));
+    }
+
+    public void reportErrorToAdmin(RuntimeException e, Lesson lesson) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo("haniazipser2004@gmail.com");
+        helper.setSubject("Error sending list");
+
+        String htmlContent = buildHtmlContent("Error sening list", "Error sending list for lesson"+ lesson.getId() + "\n" + e.getMessage());
+        helper.setText(htmlContent, true); // 'true' indicates HTML
+
+        mailSender.send(message);
     }
 }
