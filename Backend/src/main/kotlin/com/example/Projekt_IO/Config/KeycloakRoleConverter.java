@@ -13,10 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 public class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
-/**
- * @param source the source object to convert, which must be an instance of {@code S} (never {@code null})
- * @return
- */
 @Override
 public Collection<GrantedAuthority> convert(Jwt source) {
     Map<String, Object> realmAccess = (Map<String, Object>) source.getClaims().get("realm_access");

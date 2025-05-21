@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CourseService {
     private final CourseRepository courseRepository;
     private final ParticipantRepository participantRepository;
