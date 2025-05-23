@@ -41,7 +41,7 @@ public class DeclarationController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).mustRevalidate())
                 .body(declarationService.getUsersDeclarationsInCourse(email, courseId));
     }
 
@@ -50,7 +50,7 @@ public class DeclarationController {
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS).mustRevalidate())
                 .body(declarationService.getDeclarationsForLesson(email, lessonId));
     }
 
