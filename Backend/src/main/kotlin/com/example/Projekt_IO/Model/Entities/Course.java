@@ -59,20 +59,6 @@ public class Course {
         return nextLessonInstant;
     }
 
-    public Instant calculateNextOccurrence(LessonTime lessonTime) {
-        return Instant.now().with(TemporalAdjusters.next(lessonTime.getDayOfWeek()));
-    }
-
-
-    public Instant findNextLessonDate() {
-        return lessonTimes.stream()//dla kazdego dnia nastepne wystapienie
-                .map(classTime -> calculateNextOccurrence(classTime))
-                .min(Instant::compareTo)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT,
-                        "Calendar for this course is empty"
-                ));
-    }
-
     public boolean isStudentAMemeber(String email){
         boolean found = false;
         for (Participant student : students){

@@ -1,8 +1,7 @@
-package com.example.Projekt_IO.Model;
+package com.example.Projekt_IO.Model.Entities;
 
 public enum DeclarationStatus {
     WAITING,
-    CANCELLED,
     REJECTED,
     APPROVED
 }

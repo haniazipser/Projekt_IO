@@ -1,6 +1,7 @@
 package com.example.Projekt_IO.Model.Dtos;
 
 import com.example.Projekt_IO.Model.Entities.LessonTime;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class NewCourseDto {
     private UUID id;
     private String name;
+    @Email
     private String  instructor;
     private Set<LessonTime> lessonTimes;
     private Set<String> students;
