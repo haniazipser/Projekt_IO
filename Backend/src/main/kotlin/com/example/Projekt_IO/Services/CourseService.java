@@ -92,6 +92,7 @@ public class CourseService {
         participant.setEmail(email);
         participant.setCourse(course.get());
         participant.setInvitationStatus(InvitationStatus.WAITING);
+        participant.setInvited(LocalDateTime.now());
 
         participantRepository.save(participant);
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +19,8 @@ public class Participant {
 
     @Enumerated(EnumType.STRING)
     private InvitationStatus invitationStatus;
+
+    LocalDateTime invited;
 
     public Participant(){};
     @PrePersist

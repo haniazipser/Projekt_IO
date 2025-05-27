@@ -5,6 +5,8 @@ import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
 import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,12 @@ public class MatchingService {
     private final ExerciseRepository exerciseRepository;
     private final LessonService lessonService;
     private final ExerciseApplicationService exerciseApplicationService;
+    Logger logger = LoggerFactory.getLogger(MatchingService.class);
 
     @Scheduled(cron = "0 37 21 * * ?")
     @Transactional
     public void scheduleTask() {
+        logger.info("Executing sending lists");
         List<UUID> lessons = lessonService.getNextLessons();
         for (UUID l : lessons){
             matchingAlgorithm(l);
