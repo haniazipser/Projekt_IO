@@ -6,6 +6,7 @@ import com.example.Projekt_IO.Model.Dtos.NewCourseDto;
 import com.example.Projekt_IO.Services.CourseApplicationService;
 import com.example.Projekt_IO.Services.CourseService;
 import com.example.Projekt_IO.Services.UserInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class CourseController {
     private final CourseApplicationService courseApplicationService;
     private final UserInfoService userInfoService;
     @PostMapping("/create")
-    public CourseDto createGroup(@RequestBody NewCourseDto newCourseDto){
+    public CourseDto createGroup(@Valid @RequestBody NewCourseDto newCourseDto){
         String email = userInfoService.getLoggedUserInfo().getEmail();
         return courseService.createCourse(email, newCourseDto);
     }

@@ -1,16 +1,11 @@
 package com.example.Projekt_IO.Model.Dtos;
 
-import com.example.Projekt_IO.Model.DeclarationStatus;
-import com.example.Projekt_IO.Model.Entities.Exercise;
+import com.example.Projekt_IO.Model.Entities.DeclarationStatus;
 import com.example.Projekt_IO.Model.Entities.ExerciseDeclaration;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter @Setter

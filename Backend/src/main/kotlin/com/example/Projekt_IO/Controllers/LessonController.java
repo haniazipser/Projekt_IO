@@ -5,6 +5,7 @@ import com.example.Projekt_IO.Model.Dtos.LessonDto;
 import com.example.Projekt_IO.Services.LessonService;
 import com.example.Projekt_IO.Services.ExerciseService;
 import com.example.Projekt_IO.Services.UserInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,7 @@ public class LessonController {
     }
 
    @PutMapping("/exercises")
-    public void updateExercisesForLesson(@RequestBody LessonDto lesson){
+    public void updateExercisesForLesson(@Valid @RequestBody LessonDto lesson){
         lessonService.updateExercisesForLesson(lesson);
     }
 

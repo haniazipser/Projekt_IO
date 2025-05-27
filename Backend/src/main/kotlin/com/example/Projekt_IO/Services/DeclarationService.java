@@ -1,12 +1,11 @@
 package com.example.Projekt_IO.Services;
 
-import com.example.Projekt_IO.Model.DeclarationStatus;
+import com.example.Projekt_IO.Model.Entities.DeclarationStatus;
 import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
 import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
 import com.example.Projekt_IO.Model.Dtos.PointDto;
 import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Model.Entities.ExerciseDeclaration;
-import com.example.Projekt_IO.Repositories.CourseRepository;
 import com.example.Projekt_IO.Repositories.DeclarationRepository;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +75,14 @@ public class DeclarationService {
             shortDeclarations.add(new DeclarationShortDto(declaration,sum));
         }
         return shortDeclarations.stream().sorted(Comparator.comparing(DeclarationShortDto::getStudent)).collect(Collectors.toList());
+    }
+
+    public void rejectDeclarationsForExercise(UUID exerciseId) {
+        Set<ExerciseDeclaration> declarations = declarationRepository.findByExercise_Id(exerciseId);
+        for (ExerciseDeclaration declaration : declarations){
+           declaration.setDeclarationStatus(DeclarationStatus.REJECTED);
+           declarationRepository.save(declaration);
+        }
     }
 
     public Integer getDeclarationsForSessionCount(String email, UUID id) {

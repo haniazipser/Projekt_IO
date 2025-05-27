@@ -1,5 +1,6 @@
 package com.example.Projekt_IO.Services;
 
+import com.example.Projekt_IO.Model.Dtos.DeclarationDto;
 import com.example.Projekt_IO.Model.Dtos.DeclarationShortDto;
 import com.example.Projekt_IO.Model.Entities.Exercise;
 import com.example.Projekt_IO.Repositories.ExerciseRepository;
@@ -31,7 +32,6 @@ public class MatchingService {
     @Scheduled(cron = "0 37 21 * * ?")
     @Transactional
     public void scheduleTask() {
-        System.out.print("UDALO SIE WEJSC DO SCHEDULERA");
         List<UUID> lessons = lessonService.getNextLessons();
         for (UUID l : lessons){
             matchingAlgorithm(l);
@@ -93,6 +93,7 @@ public class MatchingService {
                     HttpStatus.NOT_FOUND, "Exercise not found: " + taskId));
 
             ex.setApprovedStudent(studentId);
+            declarationService.rejectDeclarationsForExercise(taskId);
             exerciseRepository.save(ex);
         }
     }
