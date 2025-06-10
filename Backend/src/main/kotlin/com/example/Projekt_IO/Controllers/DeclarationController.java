@@ -48,9 +48,11 @@ public class DeclarationController {
     @GetMapping("/lesson/{lessonId}")
     public ResponseEntity<List<DeclarationDto>> getStudentDeclarationsForLesson (@PathVariable UUID lessonId){
         String email = userInfoService.getLoggedUserInfo().getEmail();
+
+        System.out.print("JESTSMY W DOBTEJ FUNKCJI");
         return ResponseEntity
                 .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES).mustRevalidate())
                 .body(declarationService.getDeclarationsForLesson(email, lessonId));
     }
 

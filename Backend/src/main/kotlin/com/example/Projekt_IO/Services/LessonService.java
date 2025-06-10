@@ -89,9 +89,14 @@ public class LessonService {
 
         for (ExerciseDto e : lesson.getExercises()) {
             Exercise exercise = new Exercise();
+            Optional<Exercise> oldExercise = exerciseRepository.findById(e.getId());
+            if (oldExercise.isPresent()){
+                exerciseRepository.delete(oldExercise.get());
+            }
             exercise.setLesson(l.get());
             exercise.setExerciseNumber( e.getExerciseNumber());
             exercise.setSubpoint(e.getSubpoint());
+
             exerciseRepository.save(exercise);
         }
     }

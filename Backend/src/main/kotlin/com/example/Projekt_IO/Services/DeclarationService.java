@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class DeclarationService {
     private  final DeclarationRepository declarationRepository;
     private final ExerciseRepository exerciseRepository;
-    private final PointService pointService;//CZY TO TU MOZE BYC??
+    private final PointService pointService;
     public void declareExercise(String email, UUID exerciseId) {
         ExerciseDeclaration declaration = new ExerciseDeclaration();
         Optional<Exercise> exercise = exerciseRepository.findById(exerciseId);
@@ -32,11 +32,9 @@ public class DeclarationService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found");
         }else if(exercise.get().getLesson().getClassDate().isBefore(Instant.now())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not declare exercises frm past lessons");
-        }else if (!exercise.get().getLesson().getCourse().isStudentAMemeber(email)){
+        }/*else if (!exercise.get().getLesson().getCourse().isStudentAMemeber(email)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tou are not a member of this course");
-        }else if (exercise.get().getLesson().getHoursToLesson() < 12){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can no longer declare exercises");
-        }
+        }   TO DO*/
 
         declaration.setExercise(exercise.get());
         declaration.setDeclarationDate(Instant.now());
@@ -62,8 +60,9 @@ public class DeclarationService {
     }
 
     public List<DeclarationDto> getDeclarationsForLesson(String email, UUID id) {
-        return declarationRepository.findByStudentAndExercise_Lesson_Id(email,id)
+        List<DeclarationDto> test =  declarationRepository.findByStudentAndExercise_Lesson_Id(email,id)
                 .stream().map(d -> new DeclarationDto(d)).sorted(Comparator.comparing(DeclarationDto::getId)).collect(Collectors.toList());
+        return test;
     }
 
     public List<DeclarationShortDto> getAllDeclarationsForLesson(UUID lessonId) {

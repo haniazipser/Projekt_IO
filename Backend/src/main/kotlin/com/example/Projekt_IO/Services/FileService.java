@@ -49,26 +49,29 @@ public class FileService {
         for (ExerciseWithPointsDto e : exercises2) {
             StringBuilder line1 = new StringBuilder();
             StringBuilder line2 = new StringBuilder();
-            String user = keycloakClientService.getUserByEmail(e.getApprovedStudent()).block();
 
-            line1.append(i);
-            line1.append(". ");
-            line2.append(user).append(" - > ");
-            line2.append("Ex. ").append(e.getExerciseNumber());
+            if (e.getApprovedStudent()!= null) {
+                String user = keycloakClientService.getUserByEmail(e.getApprovedStudent()).block();
 
-            if (e.getSubpoint() != null && !e.getSubpoint().isEmpty()) {
-                line2.append(". ").append(e.getSubpoint()).append(") ");
+                line1.append(i);
+                line1.append(". ");
+                line2.append(user).append(" - > ");
+                line2.append("Ex. ").append(e.getExerciseNumber());
+
+                if (e.getSubpoint() != null && !e.getSubpoint().isEmpty()) {
+                    line2.append(". ").append(e.getSubpoint()).append(") ");
+                }
+
+                Chunk chunk1 = new Chunk(line1.toString(), exerciseFont);
+                Chunk chunk2 = new Chunk(line2.toString(), userFont);
+
+                Paragraph paragraph = new Paragraph();
+                paragraph.add(chunk1);
+                paragraph.add(chunk2);
+                paragraph.setSpacingAfter(10);
+
+                document.add(paragraph);
             }
-
-            Chunk chunk1 = new Chunk(line1.toString(), exerciseFont);
-            Chunk chunk2 = new Chunk(line2.toString(),userFont);
-
-            Paragraph paragraph = new Paragraph();
-            paragraph.add(chunk1);
-            paragraph.add(chunk2);
-            paragraph.setSpacingAfter(10);
-
-            document.add(paragraph);
             i++;
         }
         document.newPage();
@@ -92,8 +95,13 @@ public class FileService {
                 line1.append(e.getSubpoint()).append(") ");
             }
 
+            String user;
+            if (e.getApprovedStudent() != null){
+                 user = keycloakClientService.getUserByEmail(e.getApprovedStudent()).block();
+            }else{
+                user = "No student";
+            }
 
-            String user = keycloakClientService.getUserByEmail(e.getApprovedStudent()).block();
 
             line2.append(" - > ").append(user);
 
